@@ -1,23 +1,31 @@
 'use client';
 
-import { TrendingUp, Award, AlertCircle } from 'lucide-react';
+import { TrendingUp, Award } from 'lucide-react';
 
 export default function ForecastMetrics({ 
   isLoading, 
-  totalForecast = 0, 
-  accuracyRate = 0 
+  totalFitted = 0, 
+  lastFittedValue = 0, // New prop to receive the last fitted value
+  accuracyRate = 0,
+  selectedMonth = 'All',
+  selectedYear = 'All' 
 }) {
+  // Helper function to determine if we're showing filtered data
+  const isFiltered = selectedMonth !== 'All' || selectedYear !== 'All';
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      {/* Total Forecast Card */}
+      {/* Latest Fitted Value Card (replacing Total Forecast Card) */}
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500">Total Forecast</p>
+            <p className="text-sm font-medium text-gray-500">
+              Latest Fitted {isFiltered && <span className="text-blue-500 ml-1">(Filtered)</span>}
+            </p>
             {isLoading ? (
               <div className="h-8 w-28 bg-gray-200 animate-pulse rounded-md mt-1"></div>
             ) : (
-              <h3 className="text-3xl font-bold mt-1 text-gray-900">{totalForecast.toLocaleString()}</h3>
+              <h3 className="text-3xl font-bold mt-1 text-gray-900">{lastFittedValue.toLocaleString()}</h3>
             )}
             
             <div className="mt-4 flex items-center">
@@ -27,7 +35,7 @@ export default function ForecastMetrics({
                 <>
                   <div className="flex items-center text-gray-500">
                     <TrendingUp className="w-4 h-4 mr-1" />
-                    <span className="text-sm font-medium">Forecast Total</span>
+                    <span className="text-sm font-medium">Most Recent Value</span>
                   </div>
                 </>
               )}
@@ -44,7 +52,9 @@ export default function ForecastMetrics({
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500">Average Accuracy</p>
+            <p className="text-sm font-medium text-gray-500">
+              Average Accuracy {isFiltered && <span className="text-blue-500 ml-1">(Filtered)</span>}
+            </p>
             {isLoading ? (
               <div className="h-8 w-24 bg-gray-200 animate-pulse rounded-md mt-1"></div>
             ) : (
@@ -58,7 +68,7 @@ export default function ForecastMetrics({
                 <>
                   <div className="flex items-center text-gray-500">
                     <Award className="w-4 h-4 mr-1" />
-                    <span className="text-sm font-medium">Forecast Accuracy</span>
+                    <span className="text-sm font-medium">Fitted Accuracy</span>
                   </div>
                 </>
               )}

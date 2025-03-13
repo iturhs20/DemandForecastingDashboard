@@ -1,17 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, Filter, RefreshCw } from 'lucide-react';
+import { ChevronDown, Filter, RefreshCw, Calendar } from 'lucide-react';
 
 export default function DropdownFilters({ 
   onFilterChange, 
   products = [], 
   skus = [], 
   depots = [],
+  months = ['All', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  years = ['All', 2023, 2024, 2025],
   loading = false,
   selectedProduct = '',
   selectedSKU = '',
-  selectedDepot = ''
+  selectedDepot = '',
+  selectedMonth = 'All',
+  selectedYear = 'All'
 }) {
   const [isDependentLoading, setIsDependentLoading] = useState(false);
 
@@ -23,11 +27,13 @@ export default function DropdownFilters({
         onFilterChange({
           product: selectedProduct,
           sku: selectedSKU,
-          depot: selectedDepot
+          depot: selectedDepot,
+          month: selectedMonth || 'All',
+          year: selectedYear || 'All'
         });
       }
     }
-  }, [selectedProduct, selectedSKU, selectedDepot, loading, onFilterChange]);
+  }, [selectedProduct, selectedSKU, selectedDepot, selectedMonth, selectedYear, loading, onFilterChange]);
 
   // Reset filters handler
   const handleReset = () => {
@@ -37,7 +43,9 @@ export default function DropdownFilters({
     onFilterChange({
       product: 'All',
       sku: 'All',
-      depot: 'All'
+      depot: 'All',
+      month: 'All',
+      year: 'All'
     });
     
     setTimeout(() => {
@@ -63,7 +71,7 @@ export default function DropdownFilters({
         </button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {/* Product Dropdown */}
         <div className="relative">
           <label className="block text-xs text-gray-500 mb-1">Product</label>
@@ -73,7 +81,9 @@ export default function DropdownFilters({
               onChange={(e) => onFilterChange({
                 product: e.target.value,
                 sku: selectedSKU,
-                depot: selectedDepot
+                depot: selectedDepot,
+                month: selectedMonth,
+                year: selectedYear
               })}
               className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
               disabled={loading || isDependentLoading}
@@ -105,7 +115,9 @@ export default function DropdownFilters({
               onChange={(e) => onFilterChange({
                 product: selectedProduct,
                 sku: e.target.value,
-                depot: selectedDepot
+                depot: selectedDepot,
+                month: selectedMonth,
+                year: selectedYear
               })}
               className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
               disabled={loading || isDependentLoading || products.length === 0}
@@ -137,7 +149,9 @@ export default function DropdownFilters({
               onChange={(e) => onFilterChange({
                 product: selectedProduct,
                 sku: selectedSKU,
-                depot: e.target.value
+                depot: e.target.value,
+                month: selectedMonth,
+                year: selectedYear
               })}
               className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
               disabled={loading || isDependentLoading || skus.length === 0}
@@ -155,6 +169,66 @@ export default function DropdownFilters({
                 <RefreshCw className="w-4 h-4 animate-spin" />
               ) : (
                 <ChevronDown className="w-4 h-4" />
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Month Dropdown */}
+        <div className="relative">
+          <label className="block text-xs text-gray-500 mb-1">Month</label>
+          <div className="relative">
+            <select 
+              value={selectedMonth}
+              onChange={(e) => onFilterChange({
+                product: selectedProduct,
+                sku: selectedSKU,
+                depot: selectedDepot,
+                month: e.target.value,
+                year: selectedYear
+              })}
+              className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
+              disabled={loading || isDependentLoading}
+            >
+              {months.map(month => (
+                <option key={month} value={month}>{month}</option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+              {loading || isDependentLoading ? (
+                <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : (
+                <Calendar className="w-4 h-4" />
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Year Dropdown */}
+        <div className="relative">
+          <label className="block text-xs text-gray-500 mb-1">Year</label>
+          <div className="relative">
+            <select 
+              value={selectedYear}
+              onChange={(e) => onFilterChange({
+                product: selectedProduct,
+                sku: selectedSKU,
+                depot: selectedDepot,
+                month: selectedMonth,
+                year: e.target.value
+              })}
+              className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
+              disabled={loading || isDependentLoading}
+            >
+              {years.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+              {loading || isDependentLoading ? (
+                <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : (
+                <Calendar className="w-4 h-4" />
               )}
             </div>
           </div>
