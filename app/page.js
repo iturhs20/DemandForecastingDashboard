@@ -8,6 +8,7 @@ import Hero from './components/Hero';
 import DropdownFilters from './components/dropdownfiter';
 import ForecastMetrics from './components/forecastmetrics';
 import ForecastChart from './components/ForecastChart';
+import TopPerformingSKUs from './components/topperforming';
 
 export default function Home() {
   // Data states from trial.jsx
@@ -332,6 +333,16 @@ export default function Home() {
               monthlyData={chartDataMonthly}
               selectedMonth={selectedMonth}
               selectedYear={selectedYear}
+            />
+          </div>
+
+          <div className="mt-4">
+            <TopPerformingSKUs 
+              data={data}
+              selectedProduct={selectedProduct}
+              selectedSKU={selectedSKU}
+              selectedDepot={selectedDepot}
+              loading={loading}
             />
           </div>
         </main>

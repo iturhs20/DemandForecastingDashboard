@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, Home, BarChart2, Users, Settings, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, Home, BarChart2, Users, Settings, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 export default function Sidebar() {
@@ -64,6 +64,16 @@ export default function Sidebar() {
             <BarChart2 className="w-5 h-5 min-w-5" />
             {isOpen && <span>Short Sales</span>}
           </Link>
+
+          {/* <Link
+            href="/xx"
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all ${
+              pathname === '/xx' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+            }`}
+          >
+            <Users className="w-5 h-5 min-w-5" />
+            {isOpen && <span>??</span>}
+          </Link> */}
           
           <Link
             href="/lifecycle"
@@ -71,8 +81,8 @@ export default function Sidebar() {
               pathname === '/lifecycle' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
             }`}
           >
-            <Users className="w-5 h-5 min-w-5" />
-            {isOpen && <span>Lifecycle of Clients</span>}
+            <TrendingUp className="w-5 h-5 min-w-5" />
+            {isOpen && <span>MicroMarketing Strategy</span>}
           </Link>
           
           <Link
@@ -95,7 +105,7 @@ export default function Sidebar() {
                   YM
                 </div>
                 <div>
-                  <div className="text-sm font-medium">Admin User</div>
+                  <div className="text-sm font-medium text-black">Admin User</div>
                   <div className="text-xs text-gray-500">admin@yunometa.com</div>
                 </div>
               </div>
