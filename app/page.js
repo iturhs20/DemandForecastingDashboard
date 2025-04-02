@@ -26,7 +26,9 @@ export default function Home() {
   
   // Analytics states
   const [totalFitted, setTotalFitted] = useState(0);
-  const [lastFittedValue, setLastFittedValue] = useState(0); // New state for last fitted value
+  const [lastFittedValue, setLastFittedValue] = useState(0);
+  const [firstForecastValue, setFirstForecastValue] = useState(0); // New state for first forecast value
+  const [hasFittedData, setHasFittedData] = useState(true); // New state to track if we have fitted data
   const [averageAccuracy, setAverageAccuracy] = useState(0);
   const [chartData, setChartData] = useState([]);
   const [chartDataQuarterly, setChartDataQuarterly] = useState([]);
@@ -247,23 +249,42 @@ export default function Home() {
       return a.MonthIndex - b.MonthIndex;
     });
     
-    // Get the last fitted value from the monthly data (most recent)
+    // Determine if we have any fitted data in our filtered set
+    const hasFittedData = formattedMonthlyData.some(item => 
+      item.Fitted > 0 && item.Fitted !== null && item.Fitted !== undefined
+    );
+    setHasFittedData(hasFittedData);
+
     let lastFitted = 0;
-    if (formattedMonthlyData.length > 0) {
-      // Get the last item where Fitted is not zero (or the last item if all are zero)
+    let firstForecast = 0;
+
+    if (hasFittedData) {
+      // Get the last item where Fitted is not zero
       const nonZeroFittedItems = formattedMonthlyData.filter(item => 
-        (item.Fitted > 0 || item.Actual > 0) && item.Fitted !== null && item.Fitted !== undefined
+        item.Fitted > 0 && item.Fitted !== null && item.Fitted !== undefined
       );
       
       if (nonZeroFittedItems.length > 0) {
         lastFitted = nonZeroFittedItems[nonZeroFittedItems.length - 1].Fitted;
-      } else if (formattedMonthlyData.length > 0) {
-        // Fallback to the last item
-        lastFitted = formattedMonthlyData[formattedMonthlyData.length - 1].Fitted;
+      }
+    } else {
+      // If no fitted data, find the first forecast value
+      const nonZeroForecastItems = formattedMonthlyData.filter(item => 
+        item.Forecast > 0 && item.Forecast !== null && item.Forecast !== undefined
+      );
+      
+      if (nonZeroForecastItems.length > 0) {
+        // Sort by year and month to get the first chronological forecast
+        nonZeroForecastItems.sort((a, b) => {
+          if (a.Year !== b.Year) return a.Year.localeCompare(b.Year);
+          return a.MonthIndex - b.MonthIndex;
+        });
+        firstForecast = nonZeroForecastItems[0].Forecast;
       }
     }
     
     setLastFittedValue(lastFitted);
+    setFirstForecastValue(firstForecast);
     setChartData(formattedYearlyData);
     setChartDataQuarterly(formattedQuarterlyData);
     setChartDataMonthly(formattedMonthlyData);
@@ -317,10 +338,12 @@ export default function Home() {
             <ForecastMetrics 
               isLoading={loading}
               totalFitted={totalFitted}
-              lastFittedValue={lastFittedValue} // Pass the last fitted value
+              lastFittedValue={lastFittedValue}
+              firstForecastValue={firstForecastValue}
               accuracyRate={averageAccuracy}
               selectedMonth={selectedMonth}
               selectedYear={selectedYear}
+              hasFittedData={hasFittedData}
             />
           </div>
           

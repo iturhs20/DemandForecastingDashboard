@@ -5,27 +5,34 @@ import { TrendingUp, Award } from 'lucide-react';
 export default function ForecastMetrics({ 
   isLoading, 
   totalFitted = 0, 
-  lastFittedValue = 0, // New prop to receive the last fitted value
+  lastFittedValue = 0,
+  firstForecastValue = 0, // New prop to receive the first forecast value
   accuracyRate = 0,
   selectedMonth = 'All',
-  selectedYear = 'All' 
+  selectedYear = 'All',
+  hasFittedData = true // New prop to indicate if filtered data has fitted values
 }) {
   // Helper function to determine if we're showing filtered data
   const isFiltered = selectedMonth !== 'All' || selectedYear !== 'All';
   
+  // Determine which value to display and what label to use
+  const displayValue = hasFittedData ? lastFittedValue : firstForecastValue;
+  const valueLabel = hasFittedData ? "Latest Forecast" : "Forecast";
+  const valueDescription = hasFittedData ? "Most Recent Value" : "Forecasted Value";
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      {/* Latest Fitted Value Card (replacing Total Forecast Card) */}
+      {/* Latest Fitted/Forecast Value Card */}
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm font-medium text-gray-500">
-              Latest Fitted {isFiltered && <span className="text-blue-500 ml-1">(Filtered)</span>}
+              {valueLabel} {isFiltered && <span className="text-blue-500 ml-1">(Filtered)</span>}
             </p>
             {isLoading ? (
               <div className="h-8 w-28 bg-gray-200 animate-pulse rounded-md mt-1"></div>
             ) : (
-              <h3 className="text-3xl font-bold mt-1 text-gray-900">{lastFittedValue.toLocaleString()}</h3>
+              <h3 className="text-3xl font-bold mt-1 text-gray-900">{displayValue.toLocaleString()}</h3>
             )}
             
             <div className="mt-4 flex items-center">
@@ -35,15 +42,15 @@ export default function ForecastMetrics({
                 <>
                   <div className="flex items-center text-gray-500">
                     <TrendingUp className="w-4 h-4 mr-1" />
-                    <span className="text-sm font-medium">Most Recent Value</span>
+                    <span className="text-sm font-medium">{valueDescription}</span>
                   </div>
                 </>
               )}
             </div>
           </div>
           
-          <div className="bg-blue-50 p-3 rounded-lg">
-            <TrendingUp className="w-8 h-8 text-blue-500" />
+          <div className={`${hasFittedData ? 'bg-blue-50' : 'bg-amber-50'} p-3 rounded-lg`}>
+            <TrendingUp className={`w-8 h-8 ${hasFittedData ? 'text-blue-500' : 'text-amber-500'}`} />
           </div>
         </div>
       </div>
@@ -68,7 +75,7 @@ export default function ForecastMetrics({
                 <>
                   <div className="flex items-center text-gray-500">
                     <Award className="w-4 h-4 mr-1" />
-                    <span className="text-sm font-medium">Fitted Accuracy</span>
+                    <span className="text-sm font-medium">Forecast Accuracy</span>
                   </div>
                 </>
               )}
