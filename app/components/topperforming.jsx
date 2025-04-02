@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  ArrowUp, ArrowDown, Search, Filter, RefreshCw, ChevronDown, SortAsc
+  ArrowUp, ArrowDown, Search, Filter, RefreshCw, ChevronDown, SortAsc, Calendar
 } from 'lucide-react';
 
 export default function TopPerformingSKUs({
@@ -10,6 +10,8 @@ export default function TopPerformingSKUs({
   selectedProduct = 'All',
   selectedSKU = 'All',
   selectedDepot = 'All',
+  selectedMonth = 'All',  // New prop for month filtering
+  selectedYear = 'All',   // New prop for year filtering
   loading = false
 }) {
   const [topSKUs, setTopSKUs] = useState([]);
@@ -17,10 +19,32 @@ export default function TopPerformingSKUs({
   const [sortDirection, setSortDirection] = useState('desc');
   const [searchQuery, setSearchQuery] = useState('');
   const [isCalculating, setIsCalculating] = useState(false);
+  const [hasValidData, setHasValidData] = useState(true); // New state to track if data contains valid values
+
+  // Helper function to get month name from date string
+  const getMonthName = (dateString) => {
+    if (!dateString) return '';
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const parts = dateString.split('-');
+    if (parts.length !== 3) return '';
+    const monthIndex = parseInt(parts[0]) - 1; // Adjust for 0-based index
+    return months[monthIndex];
+  };
+
+  // Helper function to extract year from date string
+  const getYear = (dateString) => {
+    if (!dateString) return '';
+    const parts = dateString.split('-');
+    if (parts.length !== 3) return '';
+    return parts[2];
+  };
 
   // Process data when selection changes
   useEffect(() => {
-    if (!data.length) return;
+    if (!data.length) {
+      setHasValidData(false);
+      return;
+    }
     
     setIsCalculating(true);
     
@@ -37,6 +61,33 @@ export default function TopPerformingSKUs({
     
     if (selectedDepot && selectedDepot !== 'All') {
       filteredData = filteredData.filter(item => item.Depot === selectedDepot);
+    }
+    
+    // Apply month filter - NEW
+    if (selectedMonth && selectedMonth !== 'All') {
+      filteredData = filteredData.filter(item => getMonthName(item.Month) === selectedMonth);
+    }
+    
+    // Apply year filter - NEW
+    if (selectedYear && selectedYear !== 'All') {
+      filteredData = filteredData.filter(item => getYear(item.Month) === selectedYear.toString());
+    }
+
+    // Check if filtered data has any non-zero values
+    const hasNonZeroData = filteredData.some(item => 
+      Number(item.Actual || 0) > 0 || 
+      Number(item.Fitted || 0) > 0 || 
+      Number(item.Forecast || 0) > 0
+    );
+
+    // If there's no meaningful data, update state and exit early
+    if (!hasNonZeroData || filteredData.length === 0) {
+      setTimeout(() => {
+        setHasValidData(false);
+        setTopSKUs([]);
+        setIsCalculating(false);
+      }, 500);
+      return;
     }
 
     // Aggregate by SKU
@@ -64,6 +115,27 @@ export default function TopPerformingSKUs({
       return acc;
     }, {});
 
+    // Filter out SKUs with zero actual, fitted, and accuracy values
+    Object.keys(skuPerformance).forEach(key => {
+      const sku = skuPerformance[key];
+      // If actual AND fitted are both zero, remove the SKU from consideration
+      if (sku.actual === 0 && sku.fitted === 0) {
+        delete skuPerformance[key];
+      }
+    });
+
+    // Check if any SKU has non-zero values after aggregation
+    const hasValidAggregatedData = Object.values(skuPerformance).length > 0;
+
+    if (!hasValidAggregatedData) {
+      setTimeout(() => {
+        setHasValidData(false);
+        setTopSKUs([]);
+        setIsCalculating(false);
+      }, 500);
+      return;
+    }
+
     // Calculate accuracy and format for display
     const skuArray = Object.values(skuPerformance).map(sku => {
       // Calculate accuracy (difference between actual and fitted as percentage)
@@ -83,15 +155,31 @@ export default function TopPerformingSKUs({
       };
     });
 
+    // Filter out SKUs where accuracy is 0
+    const filteredSkuArray = skuArray.filter(sku => 
+      // Only keep SKUs where at least actual OR fitted has a value, AND if both have values, accuracy isn't 0
+      (sku.actual > 0 || sku.fitted > 0) && !(sku.actual > 0 && sku.fitted > 0 && sku.accuracy === 0)
+    );
+
     // Apply search filter if any
-    let searchResults = skuArray;
+    let searchResults = filteredSkuArray;
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      searchResults = skuArray.filter(item => 
+      searchResults = filteredSkuArray.filter(item => 
         item.sku.toLowerCase().includes(query) || 
         item.product.toLowerCase().includes(query) ||
-        item.depots.toLowerCase().includes(query)
+        item.depots.toLowerCase().includes(query) 
       );
+    }
+
+    // Check if search returned any results
+    if (searchResults.length === 0) {
+      setTimeout(() => {
+        setHasValidData(false);
+        setTopSKUs([]);
+        setIsCalculating(false);
+      }, 500);
+      return;
     }
 
     // FIRST sort by actual values to get the true top performers
@@ -113,10 +201,11 @@ export default function TopPerformingSKUs({
     });
     
     setTimeout(() => {
+      setHasValidData(true);
       setTopSKUs(sortedResults);
       setIsCalculating(false);
     }, 500); // Small delay to show loading state
-  }, [data, selectedProduct, selectedSKU, selectedDepot, sortField, sortDirection, searchQuery]);
+  }, [data, selectedProduct, selectedSKU, selectedDepot, selectedMonth, selectedYear, sortField, sortDirection, searchQuery]);
 
   // Helper to toggle sort
   const handleSort = (field) => {
@@ -140,7 +229,7 @@ export default function TopPerformingSKUs({
         <div>
           <h3 className="text-lg font-medium text-gray-800">
             Top Performing SKUs
-            {(selectedProduct !== 'All' || selectedSKU !== 'All' || selectedDepot !== 'All') && (
+            {(selectedProduct !== 'All' || selectedSKU !== 'All' || selectedDepot !== 'All' || selectedMonth !== 'All' || selectedYear !== 'All') && (
               <span className="text-sm font-normal text-blue-600 ml-2">(Filtered)</span>
             )}
           </h3>
@@ -228,10 +317,29 @@ export default function TopPerformingSKUs({
                   </td>
                 </tr>
               ))
+            ) : !hasValidData ? (
+              <tr>
+                <td colSpan="6" className="px-6 py-8 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="rounded-full bg-gray-100 p-3 mb-3">
+                      <RefreshCw className="w-6 h-6 text-gray-400" />
+                    </div>
+                    <p className="text-gray-600 font-medium">No data available</p>
+                    <p className="text-gray-500 text-sm mt-1">
+                      {searchQuery ? 
+                        "No results match your search criteria" : 
+                        "No valid SKU data found for the selected filters"}
+                    </p>
+                    <p className="text-gray-400 text-xs mt-3">
+                      Try adjusting your filters or search criteria
+                    </p>
+                  </div>
+                </td>
+              </tr>
             ) : topSKUs.length === 0 ? (
               <tr>
                 <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
-                  No SKUs found matching the selected filters
+                  No SKUs found with valid performance data
                 </td>
               </tr>
             ) : (
@@ -276,25 +384,33 @@ export default function TopPerformingSKUs({
         </table>
       </div>
       
-      {/* Applied filters information */}
-      {(selectedProduct !== 'All' || selectedSKU !== 'All' || selectedDepot !== 'All') && !loading && !isCalculating && (
+      {/* Applied filters information - Updated to include month and year */}
+      {(selectedProduct !== 'All' || selectedSKU !== 'All' || selectedDepot !== 'All' || selectedMonth !== 'All' || selectedYear !== 'All') && !loading && !isCalculating && (
         <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
           <p className="flex items-center">
             <Filter className="w-4 h-4 mr-2" />
             Showing top SKUs filtered by: 
             <strong className="ml-2">
               {selectedProduct !== 'All' && <span>Product: {selectedProduct}</span>}
-              {selectedProduct !== 'All' && selectedSKU !== 'All' && <span> • </span>}
+              {selectedProduct !== 'All' && (selectedSKU !== 'All' || selectedDepot !== 'All' || selectedMonth !== 'All' || selectedYear !== 'All') && <span> • </span>}
+              
               {selectedSKU !== 'All' && <span>SKU: {selectedSKU}</span>}
-              {(selectedProduct !== 'All' || selectedSKU !== 'All') && selectedDepot !== 'All' && <span> • </span>}
+              {selectedSKU !== 'All' && (selectedDepot !== 'All' || selectedMonth !== 'All' || selectedYear !== 'All') && <span> • </span>}
+              
               {selectedDepot !== 'All' && <span>Depot: {selectedDepot}</span>}
+              {selectedDepot !== 'All' && (selectedMonth !== 'All' || selectedYear !== 'All') && <span> • </span>}
+              
+              {selectedMonth !== 'All' && <span className="flex items-center"><Calendar className="w-3 h-3 mr-1" />{selectedMonth}</span>}
+              {selectedMonth !== 'All' && selectedYear !== 'All' && <span> • </span>}
+              
+              {selectedYear !== 'All' && <span className="flex items-center"><Calendar className="w-3 h-3 mr-1" />{selectedYear}</span>}
             </strong>
           </p>
         </div>
       )}
       
       {/* Search info */}
-      {searchQuery && !loading && !isCalculating && (
+      {searchQuery && !loading && !isCalculating && hasValidData && (
         <div className="mt-2 text-sm text-gray-500">
           Showing results for search: "{searchQuery}"
         </div>

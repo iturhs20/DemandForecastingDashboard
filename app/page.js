@@ -365,6 +365,8 @@ export default function Home() {
               selectedProduct={selectedProduct}
               selectedSKU={selectedSKU}
               selectedDepot={selectedDepot}
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
               loading={loading}
             />
           </div>
