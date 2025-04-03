@@ -9,6 +9,7 @@ import DropdownFilters from './components/dropdownfiter';
 import ForecastMetrics from './components/forecastmetrics';
 import ForecastChart from './components/ForecastChart';
 import TopPerformingSKUs from './components/topperforming';
+import MonthWiseAccuracy from './components/monthwiseaccuracy';
 
 export default function Home() {
   // Data states from trial.jsx
@@ -344,6 +345,18 @@ export default function Home() {
               selectedMonth={selectedMonth}
               selectedYear={selectedYear}
               hasFittedData={hasFittedData}
+            />
+          </div>
+
+          <div className="mt-4">
+            <MonthWiseAccuracy 
+              data={data}
+              selectedProduct={selectedProduct}
+              selectedSKU={selectedSKU}
+              selectedDepot={selectedDepot}
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              loading={loading}
             />
           </div>
           
