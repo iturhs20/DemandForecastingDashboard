@@ -56,7 +56,7 @@ export default function Sidebar() {
           </Link>
           
           <Link
-            href="/trial"
+            href="/shortsales"
             className={`flex items-center space-x-3 p-3 rounded-lg transition-all ${
               pathname === '/reports' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
             }`}

@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function Navbar() {
   return (
-    <nav className="flex items-center justify-between bg-white px-6 py-3 border-b border-gray-100 h-31">
+    <nav className="flex items-center justify-between bg-white px-6 py-5 border-b border-gray-100 h-31">
       
       {/* Search Bar */}
       <div className="relative flex-1 max-w-md">
