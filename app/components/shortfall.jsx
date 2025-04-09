@@ -31,7 +31,7 @@ export default function ShortfallCalculator() {
   }
 
   useEffect(() => {
-    fetch("shortfall.csv")
+    fetch("/Anonymized_Shortfall_SKU (1).csv")
       .then((response) => response.text())
       .then((csvText) => {
         const parsed = Papa.parse(csvText, {
@@ -211,37 +211,8 @@ export default function ShortfallCalculator() {
           </div>
         </div>
 
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Total Shortfall Card */}
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg rounded-lg overflow-hidden">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center">
-                  <div className="h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-semibold text-slate-800">
-                      Short Sale
-                    </h3>
-                    <p className="text-sm text-slate-500">Total value</p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4">
-                <div className="flex items-baseline">
-                  <p className="text-3xl font-bold text-slate-800">
-                    ₹{formatNumber(totalShortfall)}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-blue-600 h-1"></div>
-          </div>
-
+        {/* Statistics Cards - Adjusted to two cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Revenue Loss (Units) Card */}
           <div className="bg-gradient-to-br from-red-50 to-red-100 shadow-lg rounded-lg overflow-hidden">
             <div className="p-6">
@@ -254,7 +225,7 @@ export default function ShortfallCalculator() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-slate-800">
-                      Revenue Loss 
+                      Short Fall 
                     </h3>
                     <p className="text-sm text-slate-500">Total units affected</p>
                   </div>
@@ -283,7 +254,7 @@ export default function ShortfallCalculator() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-slate-800">
-                      Total Revenue Loss
+                      Revenue Loss
                     </h3>
                     <p className="text-sm text-slate-500">Total value</p>
                   </div>

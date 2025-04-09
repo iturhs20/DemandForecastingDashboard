@@ -43,7 +43,7 @@ export default function LifecyclePage() {
     setCsvLoading(true);
     setCsvError(null);
     
-    fetch('/lifecycle.csv')
+    fetch('/Anonymized_Lifecycle.csv')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch CSV file');

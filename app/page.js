@@ -40,7 +40,7 @@ export default function Home() {
 
   // Fetch CSV data on component mount
   useEffect(() => {
-    fetch('/LightingWireFiana1.csv')
+    fetch('/Anonymized_LightingWireFiana1.csv')
       .then(response => response.text())
       .then(csvText => {
         Papa.parse(csvText, {
