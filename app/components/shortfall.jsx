@@ -1,5 +1,6 @@
 "use client"
 import ShortfallCharts from "./ShortfallCharts"
+import CardFilterComponent from "./orderratio"
 
 import { useEffect, useState } from "react"
 import Papa from "papaparse"
@@ -126,18 +127,20 @@ export default function ShortfallCalculator() {
   return (
     <div className="min-h-screen bg-slate-50">
 
+      <CardFilterComponent />
+
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Intro Section */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-slate-800 mb-2">
-            Revenue Shortfall Analyzer
+            Shortfall Analyzer
           </h2>
           <p className="text-slate-500">
             Track and analyze revenue shortfalls to identify potential improvement opportunities
           </p>
         </div>
-
+        
         {/* Filter Section */}
         <div className="bg-white shadow rounded-lg mb-8 p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
