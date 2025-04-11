@@ -1,6 +1,18 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const CustomerBarChart = ({ barData, animateCharts }) => {
+  // Format large numbers to use L (Lakh) or Cr (Crore) notation
+  const formatYAxis = (value) => {
+    if (value >= 10000000) {
+      return `${(value / 10000000).toFixed(1)}Cr`;
+    } else if (value >= 100000) {
+      return `${(value / 100000).toFixed(1)}L`;
+    } else if (value >= 1000) {
+      return `${(value / 1000).toFixed(1)}K`;
+    }
+    return value;
+  };
+
   return (
     <div className={`bg-white p-4 rounded-lg border border-gray-100 shadow-sm transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '100ms' }}>
       <h2 className="font-semibold text-gray-800 mb-4">Total Sales by Customer</h2>
@@ -12,7 +24,7 @@ const CustomerBarChart = ({ barData, animateCharts }) => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            <YAxis />
+            <YAxis tickFormatter={formatYAxis} />
             <Tooltip 
               formatter={(value) => `₹${value.toLocaleString()}`}
               contentStyle={{ 
