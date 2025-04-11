@@ -1,1 +1,1 @@
-export { default } from '../components/lifecycle';
+export { default } from '../components/lifecycle/lifecycle';

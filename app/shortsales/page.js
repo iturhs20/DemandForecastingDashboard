@@ -1,4 +1,4 @@
-import ShortfallCalculator from "../components/shortfall"
+import ShortfallCalculator from "../components/shortsales/shortfall"
 import Navbar from "../components/navbar"
 import Sidebar from "../components/sidenavbar"
 

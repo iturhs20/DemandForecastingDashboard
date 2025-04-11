@@ -5,11 +5,11 @@ import Papa from 'papaparse';
 import Sidebar from "./components/sidenavbar";
 import Navbar from "./components/navbar";
 import Hero from './components/Hero';
-import DropdownFilters from './components/dropdownfiter';
-import ForecastMetrics from './components/forecastmetrics';
-import ForecastChart from './components/ForecastChart';
-import TopPerformingSKUs from './components/topperforming';
-import MonthWiseAccuracy from './components/monthwiseaccuracy';
+import DropdownFilters from './components/dashboard/dropdownfiter';
+import ForecastMetrics from './components/dashboard/forecastmetrics';
+import ForecastChart from './components/dashboard/ForecastChart';
+import TopPerformingSKUs from './components/dashboard/topperforming';
+import MonthWiseAccuracy from './components/dashboard/monthwiseaccuracy';
 
 export default function Home() {
   // Data states from trial.jsx
