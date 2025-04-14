@@ -2,16 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  ArrowUp, ArrowDown, Search, Filter, RefreshCw, ChevronDown, SortAsc, Calendar
+  ArrowUp, ArrowDown, Search, Filter, RefreshCw, ChevronDown, SortAsc, Calendar, X
 } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function TopPerformingSKUs({
   data = [],
   selectedProduct = 'All',
   selectedSKU = 'All',
   selectedDepot = 'All',
-  selectedMonth = 'All',  // New prop for month filtering
-  selectedYear = 'All',   // New prop for year filtering
+  selectedMonth = 'All',
+  selectedYear = 'All',
   loading = false
 }) {
   const [topSKUs, setTopSKUs] = useState([]);
@@ -19,7 +20,10 @@ export default function TopPerformingSKUs({
   const [sortDirection, setSortDirection] = useState('desc');
   const [searchQuery, setSearchQuery] = useState('');
   const [isCalculating, setIsCalculating] = useState(false);
-  const [hasValidData, setHasValidData] = useState(true); // New state to track if data contains valid values
+  const [hasValidData, setHasValidData] = useState(true);
+  const [selectedSKUForGraph, setSelectedSKUForGraph] = useState(null);
+  const [graphData, setGraphData] = useState([]);
+  const [showGraph, setShowGraph] = useState(false);
 
   // Helper function to get month name from date string
   const getMonthName = (dateString) => {
@@ -63,12 +67,12 @@ export default function TopPerformingSKUs({
       filteredData = filteredData.filter(item => item.Depot === selectedDepot);
     }
     
-    // Apply month filter - NEW
+    // Apply month filter
     if (selectedMonth && selectedMonth !== 'All') {
       filteredData = filteredData.filter(item => getMonthName(item.Month) === selectedMonth);
     }
     
-    // Apply year filter - NEW
+    // Apply year filter
     if (selectedYear && selectedYear !== 'All') {
       filteredData = filteredData.filter(item => getYear(item.Month) === selectedYear.toString());
     }
@@ -104,6 +108,7 @@ export default function TopPerformingSKUs({
           forecast: 0,
           accuracy: 0,
           depots: new Set(),
+          rawData: [], // Store raw data for the SKU to use for graph
         };
       }
       
@@ -111,6 +116,15 @@ export default function TopPerformingSKUs({
       acc[sku].fitted += Number(item.Fitted || 0);
       acc[sku].forecast += Number(item.Forecast || 0);
       acc[sku].depots.add(item.Depot || 'Unknown');
+      
+      // Store the raw data for this item
+      acc[sku].rawData.push({
+        depot: item.Depot || 'Unknown',
+        actual: Number(item.Actual || 0),
+        fitted: Number(item.Fitted || 0),
+        forecast: Number(item.Forecast || 0),
+        month: item.Month
+      });
       
       return acc;
     }, {});
@@ -221,6 +235,46 @@ export default function TopPerformingSKUs({
   const getSortIcon = (field) => {
     if (sortField !== field) return null;
     return sortDirection === 'asc' ? <ArrowUp className="w-3 h-3 ml-1" /> : <ArrowDown className="w-3 h-3 ml-1" />;
+  };
+
+  // Handle SKU click for graph display
+  const handleSKUClick = (sku) => {
+    // Find the selected SKU data
+    const selectedSKUData = topSKUs.find(item => item.sku === sku);
+    
+    if (selectedSKUData) {
+      // Process the raw data to get data by depot for the graph
+      // Group by depot and aggregate
+      const depotData = {};
+      
+      selectedSKUData.rawData.forEach(item => {
+        if (!depotData[item.depot]) {
+          depotData[item.depot] = {
+            depot: item.depot,
+            actual: 0,
+            fitted: 0,
+            forecast: 0
+          };
+        }
+        
+        depotData[item.depot].actual += item.actual;
+        depotData[item.depot].fitted += item.fitted;
+        depotData[item.depot].forecast += item.forecast;
+      });
+      
+      // Convert to array for the chart
+      const chartData = Object.values(depotData);
+      
+      setSelectedSKUForGraph(sku);
+      setGraphData(chartData);
+      setShowGraph(true);
+    }
+  };
+
+  // Close graph modal
+  const handleCloseGraph = () => {
+    setShowGraph(false);
+    setSelectedSKUForGraph(null);
   };
 
   return (
@@ -345,7 +399,10 @@ export default function TopPerformingSKUs({
             ) : (
               topSKUs.map((item, index) => (
                 <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td 
+                    className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
+                    onClick={() => handleSKUClick(item.sku)}
+                  >
                     {item.sku}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
@@ -373,9 +430,6 @@ export default function TopPerformingSKUs({
                     <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100">
                       {item.depotsCount}
                     </span>
-                    <span className="ml-2 text-xs text-gray-500 hidden md:inline">
-                      {item.depots.length > 20 ? item.depots.substring(0, 20) + '...' : item.depots}
-                    </span>
                   </td>
                 </tr>
               ))
@@ -384,7 +438,7 @@ export default function TopPerformingSKUs({
         </table>
       </div>
       
-      {/* Applied filters information - Updated to include month and year */}
+      {/* Applied filters information */}
       {(selectedProduct !== 'All' || selectedSKU !== 'All' || selectedDepot !== 'All' || selectedMonth !== 'All' || selectedYear !== 'All') && !loading && !isCalculating && (
         <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
           <p className="flex items-center">
@@ -415,6 +469,47 @@ export default function TopPerformingSKUs({
           Showing results for search: "{searchQuery}"
         </div>
       )}
+
+      {/* Graph Modal */}
+      {/* Graph Modal */}
+      {showGraph && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl max-h-screen overflow-auto border border-gray-200">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-800">
+                SKU Performance: {selectedSKUForGraph}
+              </h3>
+              <button 
+                onClick={handleCloseGraph}
+                className="p-1 hover:bg-gray-100 rounded-full"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            
+            <div className="h-64 md:h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={graphData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="depot" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="actual" stroke="#3b82f6" name="Actual" strokeWidth={2} />
+                  <Line type="monotone" dataKey="fitted" stroke="#10b981" name="Fitted" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-700">
+                This graph shows actual vs. fitted values across all depots for the selected SKU.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    
     </div>
   );
 }

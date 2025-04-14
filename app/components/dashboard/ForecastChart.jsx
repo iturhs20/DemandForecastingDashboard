@@ -117,6 +117,7 @@ const ForecastChart = ({
   const finalChartData = processedChartData();
   
   // Custom tooltip formatter - Modified to handle connection points specially
+  // Removed variance percentage display
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       // Format the label differently based on the data type
@@ -146,11 +147,6 @@ const ForecastChart = ({
               <span className="ml-4 font-medium">{entry.value.toLocaleString()}</span>
             </p>
           ))}
-          {payload[0]?.payload?.VariancePercent !== undefined && (
-            <p className={`mt-2 pt-2 border-t ${payload[0].payload.VariancePercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              Variance: {payload[0].payload.VariancePercent}%
-            </p>
-          )}
         </div>
       );
     }
