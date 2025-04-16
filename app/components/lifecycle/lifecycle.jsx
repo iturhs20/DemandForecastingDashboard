@@ -280,10 +280,10 @@ export default function LifecyclePage() {
       {/* Main Content Area */}
       <div className="flex flex-col w-full">
         <Navbar />
-        <main className="p-4 bg-gray-50 overflow-y-auto">
-          <div className="bg-white shadow-sm rounded-lg p-6 mb-6 transition-all duration-500 ease-in-out">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">Lifecycle of Clients</h1>
-            <p className="text-gray-600 mb-4">
+        <main className="p-4 overflow-y-auto" style={{ background: 'linear-gradient(135deg, #024673 0%, #5C99E3 50%, #756CE5 100%)' }}>
+          <div className="shadow-sm rounded-lg p-6 mb-6 transition-all duration-500 ease-in-out" style={{ background: 'linear-gradient(135deg, #024673 0%, #5C99E3 50%, #756CE5 100%)' }}>
+            <h1 className="text-2xl font-bold text-white mb-4">Lifecycle of Clients</h1>
+            <p className="text-white mb-4">
               View and analyze sales data for all your customers. Use the filters below to customize your view.
             </p>
             

@@ -14,7 +14,7 @@ export default function HomePage() {
           <Navbar />
         
         {/* Main Content with Scrolling */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto" style={{ background: 'linear-gradient(135deg, #024673 0%, #5C99E3 50%, #756CE5 100%)' }}>
           <ShortfallCalculator />
         </main>
       </div>

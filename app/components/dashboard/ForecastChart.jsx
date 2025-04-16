@@ -117,7 +117,6 @@ const ForecastChart = ({
   const finalChartData = processedChartData();
   
   // Custom tooltip formatter - Modified to handle connection points specially
-  // Removed variance percentage display
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       // Format the label differently based on the data type
@@ -138,13 +137,13 @@ const ForecastChart = ({
       }
       
       return (
-        <div className="bg-white p-4 border shadow-sm rounded-md">
-          <p className="font-medium">{displayLabel}</p>
+        <div className="bg-white p-3 border border-blue-100 shadow-md rounded-md text-gray-800">
+          <p className="font-medium text-gray-800">{displayLabel}</p>
           {displayPayload.map((entry, index) => (
             entry.value !== null && entry.value !== undefined && 
-            <p key={index} style={{ color: entry.color }} className="flex justify-between">
-              <span>{entry.name}: </span>
-              <span className="ml-4 font-medium">{entry.value.toLocaleString()}</span>
+            <p key={index} className="flex justify-between text-sm py-1">
+              <span style={{ color: entry.color }} className="font-medium">{entry.name}: </span>
+              <span className="ml-4">{entry.value.toLocaleString()}</span>
             </p>
           ))}
         </div>
@@ -176,12 +175,12 @@ const ForecastChart = ({
   const isFilterActive = selectedMonth !== 'All' || selectedYear !== 'All';
   
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-xl shadow-md p-6 border border-blue-200 text-white">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
         <div>
-          <h3 className="font-medium text-lg text-gray-800">{getChartTitle()}</h3>
+          <h3 className="font-medium text-lg text-white">{getChartTitle()}</h3>
           {isFilterActive && (
-            <p className="text-sm text-blue-600 mt-1 flex items-center">
+            <p className="text-sm text-blue-100 mt-1 flex items-center">
               <Filter className="w-3 h-3 mr-1" />
               Filtered view
             </p>
@@ -190,13 +189,13 @@ const ForecastChart = ({
         
         <div className="flex flex-wrap mt-4 sm:mt-0 gap-2">
           {/* View toggle - disabled when month filter is active */}
-          <div className="bg-gray-100 rounded-lg p-1 flex text-sm">
+          <div className="bg-white/20 rounded-lg p-1 flex text-sm">
             <button 
               onClick={() => setChartView('yearly')}
               className={`px-3 py-1 rounded-md transition-all ${
                 chartView === 'yearly' 
                   ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-white hover:bg-white/10'
               }`}
               disabled={selectedMonth !== 'All'}
             >
@@ -207,7 +206,7 @@ const ForecastChart = ({
               className={`px-3 py-1 rounded-md transition-all ${
                 chartView === 'quarterly' 
                   ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-white hover:bg-white/10'
               }`}
               disabled={selectedMonth !== 'All'}
             >
@@ -216,23 +215,23 @@ const ForecastChart = ({
           </div>
           
           {/* Action buttons */}
-          <button className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+          {/* <button className="p-2 text-white hover:bg-white/10 rounded-lg">
             <Download className="w-4 h-4" />
           </button>
-          <button className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+          <button className="p-2 text-white hover:bg-white/10 rounded-lg">
             <RefreshCcw className="w-4 h-4" />
-          </button>
+          </button> */}
         </div>
       </div>
       
       <div className="h-96">
         {isLoading ? (
-          <div className="w-full h-full bg-gray-100 animate-pulse rounded-lg flex items-center justify-center">
-            <p className="text-gray-400">Loading chart data...</p>
+          <div className="w-full h-full bg-white/10 animate-pulse rounded-lg flex items-center justify-center">
+            <p className="text-white/70">Loading chart data...</p>
           </div>
         ) : finalChartData.length === 0 ? (
-          <div className="w-full h-full bg-gray-50 rounded-lg flex items-center justify-center">
-            <p className="text-gray-400">No data available for the selected filters</p>
+          <div className="w-full h-full bg-white/10 rounded-lg flex items-center justify-center">
+            <p className="text-white/70">No data available for the selected filters</p>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
@@ -240,13 +239,14 @@ const ForecastChart = ({
               data={finalChartData}
               margin={{ top: 10, right: 30, left: 20, bottom: 30 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.2)" />
               {chartView === 'yearly' ? (
                 <XAxis 
                   dataKey="YearMonth"
                   type="category"
                   allowDuplicatedCategory={false}
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: "white" }}
+                  stroke="white"
                   interval={0} // Show all ticks but hide most with the formatter
                   tickFormatter={(value) => {
                     if (!value) return '';
@@ -268,14 +268,15 @@ const ForecastChart = ({
               ) : (
                 <XAxis 
                   dataKey={chartView === 'quarterly' ? 'YearQuarter' : 'Year'} 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: "white" }}
                   angle={chartView === 'quarterly' ? -45 : 0}
                   textAnchor={chartView === 'quarterly' ? 'end' : 'middle'}
                   height={60}
                 />
               )}
               <YAxis 
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "white" }}
+                stroke="white"
                 tickFormatter={(value) => {
                   if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
                   if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
@@ -283,7 +284,10 @@ const ForecastChart = ({
                 }}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Legend wrapperStyle={{ paddingTop: 10 }} />
+              <Legend 
+                wrapperStyle={{ paddingTop: 10 }}
+                formatter={(value) => <span className="text-white">{value}</span>}
+              />
               
               {/* Only render Actual and Fitted lines for points where they have actual values */}
               <Line 
@@ -292,10 +296,10 @@ const ForecastChart = ({
                   // Only show Fitted value if it exists and is greater than 0
                   return dataPoint.Fitted && dataPoint.Fitted > 0 ? dataPoint.Fitted : null;
                 }}
-                stroke="#4F46E5" 
+                stroke="#FF9F1C" // Changed from #4F46E5 to vibrant orange
                 strokeWidth={2}
                 dot={false}
-                activeDot={{ r: 6 }}
+                activeDot={{ r: 6, fill: "#FF9F1C" }}
                 name="Fitted"
               />
               
@@ -305,10 +309,10 @@ const ForecastChart = ({
                   // Only show Actual value if it exists and is greater than 0
                   return dataPoint.Actual && dataPoint.Actual > 0 ? dataPoint.Actual : null;
                 }}
-                stroke="#10B981" 
+                stroke="#2EC4B6" // Changed from #10B981 to teal
                 strokeWidth={2}
                 dot={false}
-                activeDot={{ r: 6 }}
+                activeDot={{ r: 6, fill: "#2EC4B6" }}
                 name="Actual"
               />
               
@@ -320,12 +324,12 @@ const ForecastChart = ({
                     // Only show Forecast value if it exists and is greater than 0
                     return dataPoint.Forecast && dataPoint.Forecast > 0 ? dataPoint.Forecast : null;
                   }}
-                  stroke="#F59E0B" 
+                  stroke="#E71D36" // Changed from #F59E0B to bright red
                   strokeWidth={2}
                   strokeDasharray="5 5"
                   dot={false}
                   connectNulls={true}
-                  activeDot={{ r: 6 }}
+                  activeDot={{ r: 6, fill: "#E71D36" }}
                   name="Forecast"
                 />
               )}
@@ -336,7 +340,7 @@ const ForecastChart = ({
       
       {/* Filter information banner */}
       {isFilterActive && (
-        <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
+        <div className="mt-4 p-3 bg-white/20 rounded-lg text-sm text-white">
           <p className="flex items-center">
             <Calendar className="w-4 h-4 mr-2" />
             Showing filtered data for: 

@@ -116,21 +116,21 @@ const OrderFulfillment = () => {
   const colors = getGradientColors();
 
   return (
-    <div className="bg-slate-50">
+    <div style={{ background: 'linear-gradient(135deg, #024673 0%, #5C99E3 50%, #756CE5 100%)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Intro Section - Reduced vertical margin */}
         <div className="mb-4">
-          <h2 className="text-2xl font-bold text-slate-800 mb-1">
-            Order Fulfillment 
+          <h2 className="text-2xl font-bold text-white mb-1">
+            Order Fulfillment Dashboard
           </h2>
-          <p className="text-slate-500">
+          <p className="text-white">
             Analyze order fulfillment ratios and identify performance trends
           </p>
         </div>
 
         {/* Filter Section - Reduced vertical margin */}
-        <div className="bg-white shadow rounded-lg mb-4 p-4">
-          <h3 className="text-lg font-medium text-slate-700 mb-3">
+        <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] shadow rounded-lg mb-4 p-4">
+          <h3 className="text-lg font-medium text-white mb-3">
             Select Fulfillment Ratio Range
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

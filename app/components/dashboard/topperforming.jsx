@@ -278,16 +278,16 @@ export default function TopPerformingSKUs({
   };
 
   return (
-    <div className="mt-6 bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <div className="mt-6 bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-xl shadow-sm p-6 border border-blue-200">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
-          <h3 className="text-lg font-medium text-gray-800">
+          <h3 className="text-lg font-medium text-white">
             Top Performing SKUs
             {(selectedProduct !== 'All' || selectedSKU !== 'All' || selectedDepot !== 'All' || selectedMonth !== 'All' || selectedYear !== 'All') && (
               <span className="text-sm font-normal text-blue-600 ml-2">(Filtered)</span>
             )}
           </h3>
-          <p className="text-sm text-gray-500 mt-1">Showing top 10 SKUs based on actual sales volume</p>
+          <p className="text-sm text-white mt-1">Showing top 10 SKUs based on actual sales volume</p>
         </div>
         
         <div className="mt-4 md:mt-0 w-full md:w-auto">
@@ -306,40 +306,40 @@ export default function TopPerformingSKUs({
       </div>
       
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('sku')}>
+            <tr className="bg-white">
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider cursor-pointer" onClick={() => handleSort('sku')}>
                 <div className="flex items-center">
                   SKU
                   {getSortIcon('sku')}
                 </div>
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('product')}>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider cursor-pointer" onClick={() => handleSort('product')}>
                 <div className="flex items-center">
                   Product
                   {getSortIcon('product')}
                 </div>
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('actual')}>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider cursor-pointer" onClick={() => handleSort('actual')}>
                 <div className="flex items-center">
                   Actual
                   {getSortIcon('actual')}
                 </div>
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('fitted')}>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider cursor-pointer" onClick={() => handleSort('fitted')}>
                 <div className="flex items-center">
                   Fitted
                   {getSortIcon('fitted')}
                 </div>
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('accuracy')}>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider cursor-pointer" onClick={() => handleSort('accuracy')}>
                 <div className="flex items-center">
                   Accuracy
                   {getSortIcon('accuracy')}
                 </div>
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('depotsCount')}>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider cursor-pointer" onClick={() => handleSort('depotsCount')}>
                 <div className="flex items-center">
                   Depots
                   {getSortIcon('depotsCount')}
@@ -347,87 +347,82 @@ export default function TopPerformingSKUs({
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody>
             {loading || isCalculating ? (
               Array(5).fill(0).map((_, index) => (
-                <tr key={index} className="animate-pulse">
+                <tr key={index} className="animate-pulse bg-gradient-to-r from-[#024673] to-[#5C99E3]">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded w-20"></div>
+                    <div className="h-4 bg-blue-500 rounded w-20"></div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded w-24"></div>
+                    <div className="h-4 bg-blue-500 rounded w-24"></div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded w-16"></div>
+                    <div className="h-4 bg-blue-500 rounded w-16"></div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded w-16"></div>
+                    <div className="h-4 bg-blue-500 rounded w-16"></div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded w-12"></div>
+                    <div className="h-4 bg-blue-500 rounded w-12"></div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded w-10"></div>
+                    <div className="h-4 bg-blue-500 rounded w-10"></div>
                   </td>
                 </tr>
               ))
             ) : !hasValidData ? (
-              <tr>
+              <tr className="bg-gradient-to-r from-[#024673] to-[#5C99E3]">
                 <td colSpan="6" className="px-6 py-8 text-center">
                   <div className="flex flex-col items-center justify-center">
-                    <div className="rounded-full bg-gray-100 p-3 mb-3">
-                      <RefreshCw className="w-6 h-6 text-gray-400" />
+                    <div className="rounded-full bg-[#024673] p-3 mb-3">
+                      <RefreshCw className="w-6 h-6 text-white" />
                     </div>
-                    <p className="text-gray-600 font-medium">No data available</p>
-                    <p className="text-gray-500 text-sm mt-1">
+                    <p className="text-white font-medium">No data available</p>
+                    <p className="text-blue-100 text-sm mt-1">
                       {searchQuery ? 
                         "No results match your search criteria" : 
                         "No valid SKU data found for the selected filters"}
                     </p>
-                    <p className="text-gray-400 text-xs mt-3">
+                    <p className="text-blue-100 text-xs mt-3">
                       Try adjusting your filters or search criteria
                     </p>
                   </div>
                 </td>
               </tr>
             ) : topSKUs.length === 0 ? (
-              <tr>
-                <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+              <tr className="bg-gradient-to-r from-[#024673] to-[#5C99E3]">
+                <td colSpan="6" className="px-6 py-8 text-center text-white">
                   No SKUs found with valid performance data
                 </td>
               </tr>
             ) : (
               topSKUs.map((item, index) => (
-                <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <tr key={index} className="bg-gradient-to-r from-[#024673] to-[#5C99E3] border-b border-blue-200">
                   <td 
-                    className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
+                    className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white cursor-pointer hover:text-blue-200 hover:underline"
                     onClick={() => handleSKUClick(item.sku)}
                   >
                     {item.sku}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                     {item.product}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-semibold">
                     {item.actual.toLocaleString()}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                     {item.fitted.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <span className={`text-sm font-medium ${
-                        item.accuracy >= 90 ? 'text-green-600' :
-                        item.accuracy >= 80 ? 'text-blue-600' :
-                        item.accuracy >= 70 ? 'text-yellow-600' :
-                        'text-red-600'
-                      }`}>
+                      <span className="text-sm font-medium text-white">
                         {item.accuracy}%
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-white text-[#024673]">
                       {item.depotsCount}
                     </span>
                   </td>
@@ -471,19 +466,18 @@ export default function TopPerformingSKUs({
       )}
 
       {/* Graph Modal */}
-      {/* Graph Modal */}
       {showGraph && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl max-h-screen overflow-auto border border-gray-200">
+          <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-lg shadow-lg p-6 w-full max-w-4xl max-h-screen overflow-auto border border-blue-200">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-800">
+              <h3 className="text-lg font-medium text-white">
                 SKU Performance: {selectedSKUForGraph}
               </h3>
               <button 
                 onClick={handleCloseGraph}
-                className="p-1 hover:bg-gray-100 rounded-full"
+                className="p-1 hover:bg-[#5C99E3] rounded-full"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
             
@@ -491,11 +485,11 @@ export default function TopPerformingSKUs({
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={graphData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="depot" />
-                  <YAxis />
+                  <XAxis dataKey="depot" stroke="white" />
+                  <YAxis stroke="white"/>
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="actual" stroke="#3b82f6" name="Actual" strokeWidth={2} />
+                  <Line type="monotone" dataKey="actual" stroke="#FF9F1C" name="Actual" strokeWidth={2} />
                   <Line type="monotone" dataKey="fitted" stroke="#10b981" name="Fitted" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>

@@ -125,7 +125,7 @@ export default function ShortfallCalculator() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #024673 0%, #5C99E3 50%, #756CE5 100%)' }}>
 
       <CardFilterComponent />
 
@@ -133,25 +133,25 @@ export default function ShortfallCalculator() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Intro Section */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">
+          <h2 className="text-2xl font-bold text-white mb-2">
             Shortfall Analyzer
           </h2>
-          <p className="text-slate-500">
+          <p className="text-white">
             Track and analyze revenue shortfalls to identify potential improvement opportunities
           </p>
         </div>
         
         {/* Filter Section */}
-        <div className="bg-white shadow rounded-lg mb-8 p-6">
+        <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3]shadow rounded-lg mb-8 p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Month
               </label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="w-full border border-slate-300 rounded-md py-2 px-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full border border-blue-200 rounded-md py-2 px-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">All Months</option>
                 {uniqueMonths.map((month, i) => (
@@ -163,13 +163,13 @@ export default function ShortfallCalculator() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Financial Year
               </label>
               <select
                 value={selectedFY}
                 onChange={(e) => setSelectedFY(e.target.value)}
-                className="w-full border border-slate-300 rounded-md py-2 px-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full border border-blue-200 rounded-md py-2 px-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">All FYs</option>
                 {uniqueFYs.map((fy, i) => (
@@ -181,13 +181,13 @@ export default function ShortfallCalculator() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Category
               </label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full border border-slate-300 rounded-md py-2 px-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full border border-blue-200 rounded-md py-2 px-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">All Categories</option>
                 {uniqueCategories.map((cat, i) => (
@@ -201,13 +201,13 @@ export default function ShortfallCalculator() {
           
           <div className="mt-4 pt-4 border-t border-slate-200">
             <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white text-black">
                 {selectedMonth || "All Months"}
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white text-black">
                 {selectedFY || "All FYs"}
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white text-black">
                 {selectedCategory || "All Categories"}
               </span>
             </div>

@@ -23,24 +23,24 @@ export default function ForecastMetrics({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       {/* Latest Fitted/Forecast Value Card */}
-      <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+      <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-xl shadow-sm p-6 border border-blue-400 border-opacity-20">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500">
-              {valueLabel} {isFiltered && <span className="text-blue-500 ml-1">(Filtered)</span>}
+            <p className="text-sm font-medium text-white">
+              {valueLabel} {isFiltered && <span className="text-white ml-1">(Filtered)</span>}
             </p>
             {isLoading ? (
-              <div className="h-8 w-28 bg-gray-200 animate-pulse rounded-md mt-1"></div>
+              <div className="h-8 w-28 bg-blue-300 animate-pulse rounded-md mt-1"></div>
             ) : (
-              <h3 className="text-3xl font-bold mt-1 text-gray-900">{displayValue.toLocaleString()}</h3>
+              <h3 className="text-3xl font-bold mt-1 text-white">{displayValue.toLocaleString()}</h3>
             )}
             
             <div className="mt-4 flex items-center">
               {isLoading ? (
-                <div className="h-5 w-16 bg-gray-200 animate-pulse rounded-md"></div>
+                <div className="h-5 w-16 bg-blue-300 animate-pulse rounded-md"></div>
               ) : (
                 <>
-                  <div className="flex items-center text-gray-500">
+                  <div className="flex items-center text-white">
                     <TrendingUp className="w-4 h-4 mr-1" />
                     <span className="text-sm font-medium">{valueDescription}</span>
                   </div>
@@ -56,24 +56,24 @@ export default function ForecastMetrics({
       </div>
       
       {/* Accuracy Card */}
-      <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+      <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-xl shadow-md p-6 border border-blue-400 border-opacity-20">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500">
-              Average Accuracy {isFiltered && <span className="text-blue-500 ml-1">(Filtered)</span>}
+            <p className="text-sm font-medium text-white">
+              Average Accuracy {isFiltered && <span className="text-white ml-1">(Filtered)</span>}
             </p>
             {isLoading ? (
-              <div className="h-8 w-24 bg-gray-200 animate-pulse rounded-md mt-1"></div>
+              <div className="h-8 w-24 bg-blue-100 animate-pulse rounded-md mt-1"></div>
             ) : (
-              <h3 className="text-3xl font-bold mt-1 text-gray-900">{accuracyRate}%</h3>
+              <h3 className="text-3xl font-bold mt-1 text-white">{accuracyRate}%</h3>
             )}
             
             <div className="mt-4 flex items-center">
               {isLoading ? (
-                <div className="h-5 w-16 bg-gray-200 animate-pulse rounded-md"></div>
+                <div className="h-5 w-16 bg-blue-300 bg-opacity-20 animate-pulse rounded-md"></div>
               ) : (
                 <>
-                  <div className="flex items-center text-gray-500">
+                  <div className="flex items-center text-white">
                     <Award className="w-4 h-4 mr-1" />
                     <span className="text-sm font-medium">Forecast Accuracy</span>
                   </div>

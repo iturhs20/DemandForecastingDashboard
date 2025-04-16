@@ -14,8 +14,8 @@ const CustomerBarChart = ({ barData, animateCharts }) => {
   };
 
   return (
-    <div className={`bg-white p-4 rounded-lg border border-gray-100 shadow-sm transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '100ms' }}>
-      <h2 className="font-semibold text-gray-800 mb-4">Total Sales by Customer</h2>
+    <div className={`bg-gradient-to-br from-[#024673] to-[#5C99E3] p-4 rounded-lg border border-blue-200 shadow-sm transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '100ms' }}>
+      <h2 className="font-semibold text-white mb-4">Total Sales by Customer</h2>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -23,8 +23,8 @@ const CustomerBarChart = ({ barData, animateCharts }) => {
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis tickFormatter={formatYAxis} />
+            <XAxis dataKey="name" stroke="white"/>
+            <YAxis tickFormatter={formatYAxis} stroke="white"/>
             <Tooltip 
               formatter={(value) => `₹${value.toLocaleString()}`}
               contentStyle={{ 
@@ -39,7 +39,8 @@ const CustomerBarChart = ({ barData, animateCharts }) => {
             <Bar 
               dataKey="sales" 
               name="Sales (₹)" 
-              fill="#3B82F6" 
+              fill="#FF8042" 
+              stroke="white" 
               radius={[4, 4, 0, 0]}
               animationDuration={1500}
               animationEasing="ease-in-out"

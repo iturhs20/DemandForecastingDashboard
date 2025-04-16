@@ -21,7 +21,7 @@ const ProductPieChart = ({ pieData, animateCharts, activeProduct, handlePieClick
       <text 
         x={x} 
         y={y} 
-        fill="#333"
+        fill="#FFF"
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
         fontSize={12}
@@ -44,8 +44,8 @@ const ProductPieChart = ({ pieData, animateCharts, activeProduct, handlePieClick
   };
 
   return (
-    <div className={`bg-white p-4 rounded-lg border border-gray-100 shadow-sm lg:col-span-2 transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '300ms' }}>
-      <h2 className="font-semibold text-gray-800 mb-4">Sales by Product</h2>
+    <div className={`bg-gradient-to-br from-[#024673] to-[#5C99E3] p-4 rounded-lg border border-blue-200 shadow-sm lg:col-span-2 transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '300ms' }}>
+      <h2 className="font-semibold text-white mb-4">Sales by Product</h2>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>

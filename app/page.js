@@ -312,7 +312,7 @@ export default function Home() {
       {/* Main Content Area */}
       <div className="flex flex-col w-full">
         <Navbar />
-        <main className="p-4 bg-gray-50 overflow-y-auto"> 
+        <main className="p-4 overflow-y-auto" style={{ background: 'linear-gradient(135deg, #024673 0%, #5C99E3 50%, #756CE5 100%)' }}> 
           {/* Hero Section */}
           <Hero />
           

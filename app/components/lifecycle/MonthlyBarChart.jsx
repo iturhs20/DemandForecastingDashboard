@@ -14,8 +14,8 @@ const MonthlyBarChart = ({ monthlyData, animateCharts }) => {
   };
 
   return (
-    <div className={`bg-white p-4 rounded-lg border border-gray-100 shadow-sm transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '200ms' }}>
-      <h2 className="font-semibold text-gray-800 mb-4">Monthly Sales Trend</h2>
+    <div className={`bg-gradient-to-br from-[#024673] to-[#5C99E3] p-4 rounded-lg border border-blue-200 shadow-sm transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '200ms' }}>
+      <h2 className="font-semibold text-white mb-4">Monthly Sales Trend</h2>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -23,8 +23,8 @@ const MonthlyBarChart = ({ monthlyData, animateCharts }) => {
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis tickFormatter={formatYAxis} />
+            <XAxis dataKey="month" stroke="white"/>
+            <YAxis tickFormatter={formatYAxis} stroke="white"/>
             <Tooltip 
               formatter={(value) => `₹${value.toLocaleString()}`}
               contentStyle={{ 
@@ -39,7 +39,8 @@ const MonthlyBarChart = ({ monthlyData, animateCharts }) => {
             <Bar 
               dataKey="sales" 
               name="Monthly Sales (₹)" 
-              fill="#6366F1" 
+              fill="#00C49F"
+              stroke="white" 
               radius={[4, 4, 0, 0]}
               animationDuration={1500}
               animationEasing="ease-in-out"

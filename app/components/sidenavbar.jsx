@@ -14,12 +14,12 @@ export default function Sidebar() {
     <div className="flex h-screen">
       {/* Sidebar */}
       <aside
-        className={`h-screen bg-white border-r border-gray-100 transition-all duration-300 ${
+        className={`h-screen bg-gradient-to-b from-gray-900 to-blue-950 transition-all duration-300 ${
           isOpen ? 'w-64' : 'w-20'
         } relative`}
       >
         {/* Sidebar Header - Logo & Toggle Button */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 w-full flex items-center justify-between py-5 px-4">
+        <div className="bg-gradient-to-r from-gray-900 to-blue-950 w-full flex items-center justify-between py-5 px-4">
           {/* Logo */}
           <div className={`transition-all duration-300 ${isOpen ? 'ml-0' : '-ml-2'}`}>
             <Image
@@ -35,11 +35,11 @@ export default function Sidebar() {
         {/* Toggle button */}
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute -right-3 top-16 bg-white rounded-full p-1 border border-gray-200 shadow-md hover:shadow-lg transition-all"
+          className="absolute -right-3 top-16 bg-blue-800 rounded-full p-1 border border-blue-700 shadow-md hover:shadow-lg transition-all"
         >
           {isOpen ? 
-            <ChevronLeft className="w-4 h-4 text-blue-600" /> : 
-            <ChevronRight className="w-4 h-4 text-blue-600" />
+            <ChevronLeft className="w-4 h-4 text-white" /> : 
+            <ChevronRight className="w-4 h-4 text-white" />
           }
         </button>
 
@@ -48,7 +48,7 @@ export default function Sidebar() {
           <Link
             href="/"
             className={`flex items-center space-x-3 p-3 rounded-lg transition-all font-medium ${
-              pathname === '/' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+              pathname === '/' ? 'bg-[#264158] text-white' : 'text-gray-300 hover:bg-[#26435B] hover:text-white'
             }`}
           >
             <Home className="w-5 h-5 min-w-5" />
@@ -58,27 +58,17 @@ export default function Sidebar() {
           <Link
             href="/shortsales"
             className={`flex items-center space-x-3 p-3 rounded-lg transition-all ${
-              pathname === '/shortsales' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+              pathname === '/shortsales' ? 'bg-[#264158] text-white font-medium' : 'text-gray-300 hover:bg-[#26435B] hover:text-white'
             }`}
           >
             <BarChart2 className="w-5 h-5 min-w-5" />
             {isOpen && <span>Short Sales</span>}
           </Link>
-
-          {/* <Link
-            href="/xx"
-            className={`flex items-center space-x-3 p-3 rounded-lg transition-all ${
-              pathname === '/xx' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
-            }`}
-          >
-            <Users className="w-5 h-5 min-w-5" />
-            {isOpen && <span>??</span>}
-          </Link> */}
           
           <Link
             href="/lifecycle"
             className={`flex items-center space-x-3 p-3 rounded-lg transition-all ${
-              pathname === '/lifecycle' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+              pathname === '/lifecycle' ? 'bg-[#264158] text-white font-medium' : 'text-gray-300 hover:bg-[#26435B] hover:text-white'
             }`}
           >
             <TrendingUp className="w-5 h-5 min-w-5" />
@@ -88,7 +78,7 @@ export default function Sidebar() {
           <Link
             href="/settings"
             className={`flex items-center space-x-3 p-3 rounded-lg transition-all ${
-              pathname === '/settings' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+              pathname === '/settings' ? 'bg-[#264158] text-white font-medium' : 'text-gray-300 hover:bg-[#26435B] hover:text-white'
             }`}
           >
             <Settings className="w-5 h-5 min-w-5" />
@@ -99,14 +89,14 @@ export default function Sidebar() {
         {/* User profile section at bottom */}
         {isOpen && (
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <div className="border-t border-gray-100 pt-4">
+            <div className="border-t border-blue-800 pt-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center text-white font-medium">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 flex items-center justify-center text-white font-medium">
                   YM
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-black">Admin User</div>
-                  <div className="text-xs text-gray-500">admin@yunometa.com</div>
+                  <div className="text-sm font-medium text-white">Admin User</div>
+                  <div className="text-xs text-gray-400">admin@yunometa.com</div>
                 </div>
               </div>
             </div>

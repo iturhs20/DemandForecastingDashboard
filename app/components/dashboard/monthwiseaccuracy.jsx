@@ -198,20 +198,20 @@ export default function MonthWiseAccuracy({
   // Get color based on accuracy value
   const getAccuracyColor = (accuracy) => {
     const value = parseFloat(accuracy);
-    if (value >= 90) return 'text-green-600 bg-green-50';
-    if (value >= 80) return 'text-blue-600 bg-blue-50';
-    if (value >= 70) return 'text-yellow-600 bg-yellow-50';
-    return 'text-red-600 bg-red-50';
+    if (value >= 90) return 'text-green-600 bg-green-100';
+    if (value >= 80) return 'text-blue-600 bg-blue-100';
+    if (value >= 70) return 'text-yellow-600 bg-yellow-100';
+    return 'text-red-600 bg-red-100';
   };
 
   // Get visible months based on current index and count
   const visibleMonths = accuracyData.slice(visibleMonthIndex, visibleMonthIndex + visibleMonthCount);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 w-full overflow-hidden">
-      <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-        <h3 className="text-sm font-medium text-gray-700 flex items-center">
-          <BarChart className="w-4 h-4 mr-2 text-gray-500" />
+    <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-xl shadow-md border border-blue-300/20 text-white mb-6 w-full overflow-hidden">
+      <div className="p-4 border-b border-blue-300/20 flex justify-between items-center">
+        <h3 className="text-sm font-medium text-white flex items-center">
+          <BarChart className="w-4 h-4 mr-2 text-white" />
           Month-Wise Accuracy {selectedYear !== 'All' ? `(${selectedYear})` : '(All Years)'}
         </h3>
         
@@ -221,20 +221,20 @@ export default function MonthWiseAccuracy({
             <button 
               onClick={handlePreviousYear}
               disabled={years.indexOf(currentYear.toString()) === 0 || loading}
-              className={`p-1 rounded-md ${years.indexOf(currentYear.toString()) === 0 ? 'text-gray-300' : 'text-blue-600 hover:bg-blue-50'}`}
+              className={`p-1 rounded-md ${years.indexOf(currentYear.toString()) === 0 ? 'text-blue-200/50' : 'text-white hover:bg-blue-600/30'}`}
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
             
-            <div className="flex items-center px-2 py-1 bg-gray-50 rounded-md">
-              <Calendar className="w-3 h-3 mr-1 text-gray-500" />
-              <span className="text-sm font-medium">{currentYear}</span>
+            <div className="flex items-center px-2 py-1 bg-white/20 rounded-md">
+              <Calendar className="w-3 h-3 mr-1 text-white" />
+              <span className="text-sm font-medium text-white">{currentYear}</span>
             </div>
             
             <button 
               onClick={handleNextYear}
               disabled={years.indexOf(currentYear.toString()) === years.length - 1 || loading}
-              className={`p-1 rounded-md ${years.indexOf(currentYear.toString()) === years.length - 1 ? 'text-gray-300' : 'text-blue-600 hover:bg-blue-50'}`}
+              className={`p-1 rounded-md ${years.indexOf(currentYear.toString()) === years.length - 1 ? 'text-blue-200/50' : 'text-white hover:bg-blue-600/30'}`}
             >
               <ArrowRight className="w-4 h-4" />
             </button>
@@ -245,8 +245,8 @@ export default function MonthWiseAccuracy({
       {loading ? (
         <div className="p-8 flex justify-center">
           <div className="animate-pulse space-y-4 w-full">
-            <div className="h-6 bg-gray-200 rounded w-1/4 mx-auto"></div>
-            <div className="h-32 bg-gray-200 rounded"></div>
+            <div className="h-6 bg-white/20 rounded w-1/4 mx-auto"></div>
+            <div className="h-32 bg-white/20 rounded"></div>
           </div>
         </div>
       ) : (
@@ -254,23 +254,23 @@ export default function MonthWiseAccuracy({
           {hasData ? (
             <div className="w-full">
               {/* Month navigation controls */}
-              <div className="flex justify-between items-center px-4 py-2 bg-gray-50">
+              <div className="flex justify-between items-center px-4 py-2 bg-gradient-to-br from-[#024673] to-[#5C99E3] text-white">
                 <button 
                   onClick={handlePreviousMonth}
                   disabled={visibleMonthIndex === 0 || loading}
-                  className={`p-1 rounded-md ${visibleMonthIndex === 0 ? 'text-gray-300' : 'text-blue-600 hover:bg-blue-50'}`}
+                  className={`p-1 rounded-md ${visibleMonthIndex === 0 ? 'text-blue-200/50' : 'text-white hover:bg-blue-600/30'}`}
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-white/80">
                   Showing {visibleMonthIndex + 1}-{Math.min(visibleMonthIndex + visibleMonthCount, accuracyData.length)} of {accuracyData.length} months
                 </span>
                 
                 <button 
                   onClick={handleNextMonth}
                   disabled={visibleMonthIndex + visibleMonthCount >= accuracyData.length || loading}
-                  className={`p-1 rounded-md ${visibleMonthIndex + visibleMonthCount >= accuracyData.length ? 'text-gray-300' : 'text-blue-600 hover:bg-blue-50'}`}
+                  className={`p-1 rounded-md ${visibleMonthIndex + visibleMonthCount >= accuracyData.length ? 'text-blue-200/50' : 'text-white hover:bg-blue-600/30'}`}
                 >
                   <ArrowRight className="w-4 h-4" />
                 </button>
@@ -280,9 +280,9 @@ export default function MonthWiseAccuracy({
               <div className="inline-block min-w-full align-middle">
                 <table className="table-fixed w-full">
                   <thead>
-                    <tr className="bg-gray-50">
+                    <tr className="bg-gradient-to-br from-[#024673] to-[#5C99E3]">
                       {visibleMonths.map((item, index) => (
-                        <th key={index} className="py-3 px-4 text-left font-medium text-gray-700 border-r border-gray-100 last:border-r-0 whitespace-nowrap">
+                        <th key={index} className="py-3 px-4 text-left font-medium text-white border-r border-blue-300/20 last:border-r-0 whitespace-nowrap">
                           {item.month}
                         </th>
                       ))}
@@ -291,7 +291,7 @@ export default function MonthWiseAccuracy({
                   <tbody>
                     <tr>
                       {visibleMonths.map((item, index) => (
-                        <td key={index} className="py-3 px-4 border-r border-gray-100 last:border-r-0 whitespace-nowrap">
+                        <td key={index} className="py-3 px-4 border-r border-blue-300/20 last:border-r-0 whitespace-nowrap">
                           <div className={`text-center p-2 rounded-lg font-medium ${getAccuracyColor(item.averageAccuracy)}`}>
                             {item.averageAccuracy}%
                           </div>
@@ -303,10 +303,10 @@ export default function MonthWiseAccuracy({
               </div>
             </div>
           ) : (
-            <div className="p-8 text-center text-gray-500">
-              <Calendar className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+            <div className="p-8 text-center text-white/80">
+              <Calendar className="w-8 h-8 mx-auto mb-2 text-white/50" />
               <p>No accuracy data available {selectedYear !== 'All' ? `for ${selectedYear}` : ''}</p>
-              <p className="text-sm mt-1 text-gray-400">Try adjusting your filters or selecting a different time period</p>
+              <p className="text-sm mt-1 text-white/60">Try adjusting your filters or selecting a different time period</p>
             </div>
           )}
         </>

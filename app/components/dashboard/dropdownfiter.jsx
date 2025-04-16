@@ -54,16 +54,16 @@ export default function DropdownFilters({
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+    <div className="bg-gradient-to-r from-[#024673] to-[#5C99E3] p-4 rounded-xl shadow-sm border  border-blue-200 text-white mb-6">
       <div className="flex justify-between items-center mb-3">
-        <h3 className="text-sm font-medium text-gray-500 flex items-center">
+        <h3 className="text-sm font-medium text-white flex items-center">
           <Filter className="w-4 h-4 mr-2" />
           Filter Forecasts
         </h3>
         
         <button 
           onClick={handleReset}
-          className="text-sm text-blue-600 flex items-center hover:text-blue-800"
+          className="text-sm text-white flex items-center hover:text-blue-100"
           disabled={loading}
         >
           <RefreshCw className="w-3 h-3 mr-1" />
@@ -74,7 +74,7 @@ export default function DropdownFilters({
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {/* Product Dropdown */}
         <div className="relative">
-          <label className="block text-xs text-gray-500 mb-1">Product</label>
+          <label className="block text-xs text-white mb-1">Product</label>
           <div className="relative">
             <select 
               value={selectedProduct}
@@ -85,7 +85,7 @@ export default function DropdownFilters({
                 month: selectedMonth,
                 year: selectedYear
               })}
-              className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
+              className={`w-full appearance-none bg-white border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
               disabled={loading || isDependentLoading}
             >
               {products.length === 0 ? (
@@ -108,7 +108,7 @@ export default function DropdownFilters({
         
         {/* SKU Dropdown */}
         <div className="relative">
-          <label className="block text-xs text-gray-500 mb-1">SKU</label>
+          <label className="block text-xs text-white mb-1">SKU</label>
           <div className="relative">
             <select 
               value={selectedSKU}
@@ -119,7 +119,7 @@ export default function DropdownFilters({
                 month: selectedMonth,
                 year: selectedYear
               })}
-              className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
+              className={`w-full appearance-none bg-white border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
               disabled={loading || isDependentLoading || products.length === 0}
             >
               {skus.length === 0 ? (
@@ -142,7 +142,7 @@ export default function DropdownFilters({
         
         {/* Depot Dropdown */}
         <div className="relative">
-          <label className="block text-xs text-gray-500 mb-1">Depot</label>
+          <label className="block text-xs text-white mb-1">Depot</label>
           <div className="relative">
             <select 
               value={selectedDepot}
@@ -153,7 +153,7 @@ export default function DropdownFilters({
                 month: selectedMonth,
                 year: selectedYear
               })}
-              className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
+              className={`w-full appearance-none bg-white border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
               disabled={loading || isDependentLoading || skus.length === 0}
             >
               {depots.length === 0 ? (
@@ -176,7 +176,7 @@ export default function DropdownFilters({
         
         {/* Month Dropdown */}
         <div className="relative">
-          <label className="block text-xs text-gray-500 mb-1">Month</label>
+          <label className="block text-xs text-white mb-1">Month</label>
           <div className="relative">
             <select 
               value={selectedMonth}
@@ -187,7 +187,7 @@ export default function DropdownFilters({
                 month: e.target.value,
                 year: selectedYear
               })}
-              className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
+              className={`w-full appearance-none bg-white border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
               disabled={loading || isDependentLoading}
             >
               {months.map(month => (
@@ -206,7 +206,7 @@ export default function DropdownFilters({
         
         {/* Year Dropdown */}
         <div className="relative">
-          <label className="block text-xs text-gray-500 mb-1">Year</label>
+          <label className="block text-xs text-white mb-1">Year</label>
           <div className="relative">
             <select 
               value={selectedYear}
@@ -217,7 +217,7 @@ export default function DropdownFilters({
                 month: selectedMonth,
                 year: e.target.value
               })}
-              className={`w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
+              className={`w-full appearance-none bg-white border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${loading || isDependentLoading ? 'opacity-70' : ''}`}
               disabled={loading || isDependentLoading}
             >
               {years.map(year => (

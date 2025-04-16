@@ -145,7 +145,7 @@ export default function ShortfallCharts({ data, selectedMonth, selectedFY, selec
         <div className="bg-white p-4 border border-gray-200 shadow-lg rounded-md">
           <p className="font-semibold text-gray-800">{payload[0].payload.month}</p>
           <p className="text-gray-600">
-            Shortfall: <span className="font-medium text-blue-600">{formatCurrency(payload[0].value)}</span>
+            Shortfall: <span className="font-medium text-[#00C49F]">{formatCurrency(payload[0].value)}</span>
           </p>
           <p className="text-gray-600">
             Number of Items: <span className="font-medium">{payload[0].payload.count}</span>
@@ -209,11 +209,11 @@ export default function ShortfallCharts({ data, selectedMonth, selectedFY, selec
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-pulse">
-        <div className="bg-white rounded-lg shadow-md p-4 h-96">
+        <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-lg shadow-md p-4 h-96">
           <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
           <div className="h-64 bg-gray-200 rounded"></div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-4 h-96">
+        <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-lg shadow-md p-4 h-96">
           <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
           <div className="h-64 bg-gray-200 rounded-full mx-auto w-64"></div>
         </div>
@@ -247,13 +247,13 @@ export default function ShortfallCharts({ data, selectedMonth, selectedFY, selec
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Monthly Shortfall Bar Chart */}
-      <div className="bg-white rounded-lg shadow-md p-4 h-96">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Monthly Shortfall Distribution</h3>
+      <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-lg shadow-md p-4 h-96">
+        <h3 className="text-lg font-semibold text-white mb-4">Monthly Shortfall Distribution</h3>
         {monthlyShortfallData.length > 0 ? (
           <ResponsiveContainer width="100%" height="85%">
             <BarChart data={monthlyShortfallData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
+              <XAxis dataKey="month" stroke="white"/>
               <YAxis 
                 tickFormatter={(value) => 
                   new Intl.NumberFormat('en-IN', {
@@ -262,10 +262,11 @@ export default function ShortfallCharts({ data, selectedMonth, selectedFY, selec
                     maximumFractionDigits: 1
                   }).format(value)
                 }
+                stroke="white"
               />
               <Tooltip content={<CustomBarTooltip />} />
               <Legend />
-              <Bar dataKey="shortfall" name="Shortfall Value" fill="#0088FE" />
+              <Bar dataKey="shortfall" name="Shortfall Value" fill="#00C49F" stroke="white"/>
             </BarChart>
           </ResponsiveContainer>
         ) : (
@@ -279,14 +280,14 @@ export default function ShortfallCharts({ data, selectedMonth, selectedFY, selec
       </div>
 
       {/* Category Shortfall Pie Chart */}
-      <div className="bg-white rounded-lg shadow-md p-4 h-96">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Category-wise Shortfall</h3>
+      <div className="bg-gradient-to-br from-[#024673] to-[#5C99E3] rounded-lg shadow-md p-4 h-96">
+        <h3 className="text-lg font-semibold text-white mb-4">Category-wise Shortfall</h3>
         {categoryShortfallData.length > 0 ? (
           <ResponsiveContainer width="100%" height="85%">
             <PieChart>
               <Pie
                 activeIndex={activeIndex}
-                activeShape={renderActiveShape}
+                // activeShape={renderActiveShape}
                 data={categoryShortfallData}
                 cx="50%"
                 cy="50%"
