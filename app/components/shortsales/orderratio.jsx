@@ -1,4 +1,3 @@
-// Main OrderFulfillment Component
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import FulfillmentCards from "./FulfillmentCards";
@@ -134,31 +133,61 @@ const OrderFulfillment = () => {
             Select Fulfillment Ratio Range
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {ranges.map((range, index) => (
-              <div
-                key={index}
-                className={`cursor-pointer border rounded-lg shadow-sm p-3 transition-all ${
-                  selectedRange?.label === range.label 
-                    ? `bg-${range.color}-50 border-${range.color}-300 shadow-md` 
-                    : "bg-white hover:bg-slate-50 border-slate-200"
-                }`}
-                onClick={() => {
-                  setSelectedRange(range);
-                  setShowOrdersTable(false); // Reset table view on range change
-                }}
-              >
-                <h2 className="text-lg font-semibold text-slate-800">{range.label}</h2>
-                <p className="text-sm text-slate-500">Fulfillment Ratio</p>
-              </div>
-            ))}
+            {ranges.map((range, index) => {
+              const isSelected = selectedRange?.label === range.label;
+              // Use hardcoded tailwind classes instead of dynamic ones
+              const bgColor = isSelected 
+                ? range.color === "red" ? "bg-red-100" 
+                : range.color === "blue" ? "bg-blue-100" 
+                : "bg-green-100"
+                : "bg-white";
+                
+              const borderColor = isSelected
+                ? range.color === "red" ? "border-red-300" 
+                : range.color === "blue" ? "border-blue-300" 
+                : "border-green-300"
+                : "border-slate-200";
+                
+              const hoverClass = !isSelected
+                ? range.color === "red" ? "hover:bg-red-50 hover:border-red-200" 
+                : range.color === "blue" ? "hover:bg-blue-50 hover:border-blue-200" 
+                : "hover:bg-green-50 hover:border-green-200"
+                : "";
+                
+              return (
+                <div
+                  key={index}
+                  className={`cursor-pointer border rounded-lg shadow-sm p-3 transition-all ${bgColor} ${borderColor} ${hoverClass} ${isSelected ? "shadow-md" : ""}`}
+                  onClick={() => {
+                    setSelectedRange(range);
+                    setShowOrdersTable(false); // Reset table view on range change
+                  }}
+                >
+                  <h2 className="text-lg font-semibold text-slate-800">{range.label}</h2>
+                  <p className="text-sm text-slate-500">Fulfillment Ratio</p>
+                </div>
+              );
+            })}
           </div>
           
           {selectedRange && (
             <div className="mt-3 pt-3 border-t border-slate-200">
               <div className="flex flex-wrap gap-2">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-${colors.from} text-${colors.accent}`}>
-                  Ratio: {selectedRange.label}
-                </span>
+                {selectedRange.color === "red" && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-500">
+                    Ratio: {selectedRange.label}
+                  </span>
+                )}
+                {selectedRange.color === "blue" && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-500">
+                    Ratio: {selectedRange.label}
+                  </span>
+                )}
+                {selectedRange.color === "green" && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-green-500">
+                    Ratio: {selectedRange.label}
+                  </span>
+                )}
               </div>
             </div>
           )}
@@ -175,12 +204,30 @@ const OrderFulfillment = () => {
         {/* View Orders Button */}
         {selectedRange && !showOrdersTable && (
           <div className="flex justify-center mb-4">
-            <button 
-              onClick={() => setShowOrdersTable(true)}
-              className={`px-6 py-2 bg-${colors.accent} text-white rounded-lg shadow-md hover:bg-${colors.border} transition-colors`}
-            >
-              View Orders Details
-            </button>
+            {selectedRange.color === "red" && (
+              <button 
+                onClick={() => setShowOrdersTable(true)}
+                className="px-6 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition-colors"
+              >
+                View Orders Details
+              </button>
+            )}
+            {selectedRange.color === "blue" && (
+              <button 
+                onClick={() => setShowOrdersTable(true)}
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-colors"
+              >
+                View Orders Details
+              </button>
+            )}
+            {selectedRange.color === "green" && (
+              <button 
+                onClick={() => setShowOrdersTable(true)}
+                className="px-6 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition-colors"
+              >
+                View Orders Details
+              </button>
+            )}
           </div>
         )}
       </div>
