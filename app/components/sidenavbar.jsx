@@ -52,7 +52,7 @@ export default function Sidebar() {
             }`}
           >
             <Home className="w-5 h-5 min-w-5" />
-            {isOpen && <span>Dashboard</span>}
+            {isOpen && <span>Demand Forecasting</span>}
           </Link>
           
           <Link
