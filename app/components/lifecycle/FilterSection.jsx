@@ -56,7 +56,7 @@ const FilterSection = ({
                       <Check className="h-3 w-3 text-white animate-scaleIn" />
                     )}
                   </div>
-                  <span>All Customers</span>
+                  <span className="text-black">All Customers</span>
                 </div>
                 
                 {/* Individual customer options */}
@@ -77,7 +77,7 @@ const FilterSection = ({
                         <Check className="h-3 w-3 text-white animate-scaleIn" />
                       )}
                     </div>
-                    <span>{customer}</span>
+                    <span className="text-black">{customer}</span>
                   </div>
                 ))}
               </div>
@@ -126,7 +126,7 @@ const FilterSection = ({
                         <Check className="h-3 w-3 text-white animate-scaleIn" />
                       )}
                     </div>
-                    <span>{fy}</span>
+                    <span className="text-black">{fy}</span>
                   </div>
                 ))}
               </div>
