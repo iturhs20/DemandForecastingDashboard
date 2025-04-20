@@ -8,7 +8,7 @@ import Hero from './components/Hero';
 import DropdownFilters from './components/dashboard/dropdownfiter';
 import ForecastMetrics from './components/dashboard/forecastmetrics';
 import ForecastChart from './components/dashboard/ForecastChart';
-import TopPerformingSKUs from './components/dashboard/topperforming';
+// import TopPerformingSKUs from './components/dashboard/topperforming';
 import MonthWiseAccuracy from './components/dashboard/monthwiseaccuracy';
 
 export default function Home() {
@@ -372,7 +372,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <TopPerformingSKUs 
               data={data}
               selectedProduct={selectedProduct}
@@ -382,7 +382,7 @@ export default function Home() {
               selectedYear={selectedYear}
               loading={loading}
             />
-          </div>
+          </div> */}
         </main>
       </div>
     </div>

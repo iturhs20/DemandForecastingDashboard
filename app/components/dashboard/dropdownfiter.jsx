@@ -11,9 +11,9 @@ export default function DropdownFilters({
   months = ['All', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   years = ['All', 2023, 2024, 2025],
   loading = false,
-  selectedProduct = '',
-  selectedSKU = '',
-  selectedDepot = '',
+  selectedProduct = 'All',
+  selectedSKU = 'All',
+  selectedDepot = 'All',
   selectedMonth = 'All',
   selectedYear = 'All'
 }) {
@@ -54,7 +54,7 @@ export default function DropdownFilters({
   };
 
   return (
-    <div className="bg-gradient-to-r from-[#024673] to-[#5C99E3] p-4 rounded-xl shadow-sm border  border-blue-200 text-white mb-6">
+    <div className="bg-gradient-to-r from-[#024673] to-[#5C99E3] p-4 rounded-xl shadow-sm border border-blue-200 text-white mb-6">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-sm font-medium text-white flex items-center">
           <Filter className="w-4 h-4 mr-2" />

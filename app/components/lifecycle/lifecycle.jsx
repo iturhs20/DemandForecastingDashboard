@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Sidebar from '../sidenavbar';
 import Navbar from '../navbar';
 import { IndianRupee } from "lucide-react";
@@ -10,6 +10,8 @@ import StatsCard from './StatsCard';
 import CustomerBarChart from './CustomerBarChart';
 import MonthlyBarChart from './MonthlyBarChart';
 import ProductPieChart from './ProductPieChart';
+import DropdownFilters from '../dashboard/dropdownfiter';
+import TopPerformingSKUs from '../dashboard/topperforming';
 
 export default function LifecyclePage() {
   // State for CSV data
@@ -34,19 +36,35 @@ export default function LifecyclePage() {
   const [salesGrowth, setSalesGrowth] = useState(0);
   const [animateCharts, setAnimateCharts] = useState(false);
 
-  // Load CSV data
+  // State for forecast data (for DropdownFilters and TopPerformingSKUs)
+  const [forecastData, setForecastData] = useState([]);
+  const [forecastProducts, setForecastProducts] = useState(['All']);
+  const [forecastSKUs, setForecastSKUs] = useState(['All']);
+  const [forecastDepots, setForecastDepots] = useState(['All']);
+  const [forecastLoading, setForecastLoading] = useState(false);
+  
+  // Selected filters for forecast data
+  const [selectedForecastFilters, setSelectedForecastFilters] = useState({
+    product: 'All',
+    sku: 'All',
+    depot: 'All',
+    month: 'All',
+    year: 'All'
+  });
+
+  // Load CSV data for lifecycle analytics
   useEffect(() => {
-    setCsvLoading(true);
-    setCsvError(null);
-    
-    fetch('/Anonymized_Lifecycle.csv')
-      .then((response) => {
+    const loadLifecycleData = async () => {
+      setCsvLoading(true);
+      setCsvError(null);
+      
+      try {
+        const response = await fetch('/Anonymized_Lifecycle.csv');
         if (!response.ok) {
           throw new Error('Failed to fetch CSV file');
         }
-        return response.text();
-      })
-      .then((text) => {
+        
+        const text = await response.text();
         Papa.parse(text, {
           complete: (result) => {
             if (result.data.length > 0) {
@@ -66,16 +84,65 @@ export default function LifecyclePage() {
               
               setCsvLoaded(true);
             }
+            setCsvLoading(false);
           },
           header: true,
           skipEmptyLines: true,
         });
-        setCsvLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching CSV:', error);
         setCsvError(error.message);
         setCsvLoading(false);
+      }
+    };
+    
+    loadLifecycleData();
+    // Load forecast data separately
+    loadForecastData();
+  }, []);
+
+  // Load forecast data from a separate CSV - isolated function
+  const loadForecastData = useCallback(() => {
+    setForecastLoading(true);
+    
+    fetch('/Anonymized_LightingWireFiana1.csv')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch forecast data');
+        }
+        return response.text();
+      })
+      .then((text) => {
+        Papa.parse(text, {
+          complete: (result) => {
+            if (result.data && result.data.length > 0) {
+              const forecastDataArray = result.data.filter(row => 
+                // Filter out rows with missing essential data
+                row && row.product && row.SKU && row.Depot
+              );
+              
+              setForecastData(forecastDataArray);
+              
+              // Extract unique products, SKUs, and depots for filters
+              const products = ['All', ...new Set(forecastDataArray.map(row => row.product))];
+              setForecastProducts(products);
+              
+              // Initial SKUs and depots
+              const skus = ['All', ...new Set(forecastDataArray.map(row => row.SKU))];
+              const depots = ['All', ...new Set(forecastDataArray.map(row => row.Depot))];
+              
+              setForecastSKUs(skus);
+              setForecastDepots(depots);
+            }
+            setForecastLoading(false);
+          },
+          header: true,
+          skipEmptyLines: true,
+        });
+      })
+      .catch((error) => {
+        console.error('Error loading forecast data:', error);
+        setForecastLoading(false);
       });
   }, []);
 
@@ -101,7 +168,68 @@ export default function LifecyclePage() {
     return () => clearTimeout(timer);
   }, [selectedCustomers, selectedFinancialYear, activeProduct, csvLoaded]);
 
-  const calculateTotalSales = (customers, financialYear, activeProduct) => {
+  // Handle forecast filter changes - improved to avoid unnecessary updates
+  const handleForecastFilterChange = useCallback((filters) => {
+    // Avoid unnecessary state updates if values haven't changed
+    if (JSON.stringify(filters) === JSON.stringify(selectedForecastFilters)) {
+      return;
+    }
+    
+    setForecastLoading(true);
+    
+    // Update SKUs and depots based on product selection
+    const updateFilteredLists = () => {
+      // Only update if product filter changed
+      if (filters.product !== selectedForecastFilters.product) {
+        let filteredSKUs = ['All'];
+        if (filters.product !== 'All') {
+          filteredSKUs = ['All', ...new Set(forecastData
+            .filter(item => item.product === filters.product)
+            .map(item => item.SKU))];
+        } else {
+          filteredSKUs = ['All', ...new Set(forecastData.map(item => item.SKU))];
+        }
+        
+        // Set the SKUs first
+        setForecastSKUs(filteredSKUs);
+        
+        // Reset SKU selection if not in filtered list
+        if (!filteredSKUs.includes(filters.sku)) {
+          filters.sku = 'All';
+        }
+      }
+      
+      // Update depots based on product and SKU selection
+      let filteredDepots = ['All'];
+      
+      if (filters.product !== 'All' && filters.sku !== 'All') {
+        filteredDepots = ['All', ...new Set(forecastData
+          .filter(item => item.product === filters.product && item.SKU === filters.sku)
+          .map(item => item.Depot))];
+      } else if (filters.product !== 'All') {
+        filteredDepots = ['All', ...new Set(forecastData
+          .filter(item => item.product === filters.product)
+          .map(item => item.Depot))];
+      } else if (filters.sku !== 'All') {
+        filteredDepots = ['All', ...new Set(forecastData
+          .filter(item => item.SKU === filters.sku)
+          .map(item => item.Depot))];
+      } else {
+        filteredDepots = ['All', ...new Set(forecastData.map(item => item.Depot))];
+      }
+      
+      setForecastDepots(filteredDepots);
+      
+      // Update filters after lists are updated
+      setSelectedForecastFilters(filters);
+      setForecastLoading(false);
+    };
+    
+    // Use setTimeout to ensure state updates don't clash
+    setTimeout(updateFilteredLists, 100);
+  }, [forecastData, selectedForecastFilters]);
+
+  const calculateTotalSales = useCallback((customers, financialYear, activeProduct) => {
     if (!csvLoaded || data.length === 0) return 0;
     
     let filteredData = [...data];
@@ -126,9 +254,9 @@ export default function LifecyclePage() {
       const sales = parseFloat(row.Sales || 0);
       return sum + (isNaN(sales) ? 0 : sales);
     }, 0);
-  };
+  }, [csvLoaded, data]);
 
-  const updateCharts = (customers, financialYear, activeProduct) => {
+  const updateCharts = useCallback((customers, financialYear, activeProduct) => {
     if (!csvLoaded || data.length === 0) return;
     
     // Calculate total sales based on selection
@@ -237,10 +365,10 @@ export default function LifecyclePage() {
     setBarData(barChartData);
     setMonthlyData(monthlyBarData);
     setPieData(pieChartData);
-  };
+  }, [csvLoaded, data, calculateTotalSales, financialYears]);
 
   // Handle customer selection
-  const handleCustomerToggle = (customer) => {
+  const handleCustomerToggle = useCallback((customer) => {
     setSelectedCustomers(prev => {
       if (customer === "All Customers") {
         return ["All Customers"];
@@ -256,21 +384,21 @@ export default function LifecyclePage() {
         }
       }
     });
-  };
+  }, []);
 
   // Handle financial year selection
-  const handleFinancialYearSelect = (year) => {
+  const handleFinancialYearSelect = useCallback((year) => {
     setSelectedFinancialYear(year);
-  };
+  }, []);
 
   // Handle pie chart segment click
-  const handlePieClick = (product) => {
+  const handlePieClick = useCallback((product) => {
     if (activeProduct === product) {
       setActiveProduct(null); // Deselect if already selected
     } else {
       setActiveProduct(product);
     }
-  };
+  }, [activeProduct]);
 
   return (
     <div className="flex h-screen">
@@ -370,6 +498,41 @@ export default function LifecyclePage() {
                     />
                   </div>
                 )}
+                
+                {/* Forecast Section */}
+                <div className="mt-8 pt-8 border-t border-blue-300">
+                  <h2 className="text-xl font-bold text-white mb-4">Forecast Analysis</h2>
+                  <p className="text-white mb-6">
+                    View and analyze sales forecasts by product, SKU, and depot. Use the filters below to customize your view.
+                  </p>
+                  
+                  {/* DropdownFilters Component */}
+                  <DropdownFilters
+                    onFilterChange={handleForecastFilterChange}
+                    products={forecastProducts}
+                    skus={forecastSKUs}
+                    depots={forecastDepots}
+                    loading={forecastLoading}
+                    selectedProduct={selectedForecastFilters.product}
+                    selectedSKU={selectedForecastFilters.sku}
+                    selectedDepot={selectedForecastFilters.depot}
+                    selectedMonth={selectedForecastFilters.month}
+                    selectedYear={selectedForecastFilters.year}
+                  />
+                  
+                  {/* TopPerformingSKUs Component */}
+                  {!forecastLoading && (
+                    <TopPerformingSKUs
+                      data={forecastData}
+                      selectedProduct={selectedForecastFilters.product}
+                      selectedSKU={selectedForecastFilters.sku}
+                      selectedDepot={selectedForecastFilters.depot}
+                      selectedMonth={selectedForecastFilters.month}
+                      selectedYear={selectedForecastFilters.year}
+                      loading={forecastLoading}
+                    />
+                  )}
+                </div>
               </>
             )}
           </div>
