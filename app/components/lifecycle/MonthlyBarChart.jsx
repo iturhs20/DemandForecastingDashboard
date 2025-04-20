@@ -13,6 +13,21 @@ const MonthlyBarChart = ({ monthlyData, animateCharts }) => {
     return value;
   };
 
+  // Custom tooltip to ensure visibility in both light and dark modes
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white text-black p-3 rounded-lg shadow-lg border border-gray-200">
+          <p className="font-medium text-black mb-1">{label}</p>
+          <p className="text-green-600 font-semibold">
+            Monthly Sales (₹): {payload[0].value.toLocaleString()}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className={`bg-gradient-to-br from-[#024673] to-[#5C99E3] p-4 rounded-lg border border-blue-200 shadow-sm transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '200ms' }}>
       <h2 className="font-semibold text-white mb-4">Monthly Sales Trend</h2>
@@ -25,16 +40,7 @@ const MonthlyBarChart = ({ monthlyData, animateCharts }) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" stroke="white"/>
             <YAxis tickFormatter={formatYAxis} stroke="white"/>
-            <Tooltip 
-              formatter={(value) => `₹${value.toLocaleString()}`}
-              contentStyle={{ 
-                borderRadius: '8px',
-                border: 'none',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                transition: 'all 0.3s ease'
-              }}
-              animationDuration={300}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ transition: 'all 0.3s ease' }} />
             <Bar 
               dataKey="sales" 
