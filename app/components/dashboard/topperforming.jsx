@@ -6,6 +6,23 @@ import {
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+// Custom tooltip component with black text
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-3 border border-gray-200 shadow-md rounded-md">
+        <p className="text-black font-medium mb-1">{`Depot: ${label}`}</p>
+        {payload.map((entry, index) => (
+          <p key={`item-${index}`} style={{ color: entry.color }} className="text-sm text-black">
+            {`${entry.name}: ${entry.value.toLocaleString()}`}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function TopPerformingSKUs({
   data = [],
   selectedProduct = 'All',
@@ -487,7 +504,7 @@ export default function TopPerformingSKUs({
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="depot" stroke="white" />
                   <YAxis stroke="white"/>
-                  <Tooltip />
+                  <Tooltip content={<CustomTooltip />} />
                   <Legend />
                   <Line type="monotone" dataKey="actual" stroke="#FF9F1C" name="Actual" strokeWidth={2} />
                   <Line type="monotone" dataKey="fitted" stroke="#10b981" name="Fitted" strokeWidth={2} />

@@ -37,6 +37,7 @@ const MonthsActivityCard = ({
   monthsWithSales,
   totalMonths,
   selectedFinancialYear,
+  activeProduct,
   animateCharts
 }) => {
   return (
@@ -47,7 +48,7 @@ const MonthsActivityCard = ({
         </div>
         <div>
           <h3 className="text-lg font-semibold text-white">
-            Months with Sales Activity - {selectedFinancialYear}
+            Months with Sales Activity {activeProduct ? `(${activeProduct})` : ''} - {selectedFinancialYear}
           </h3>
           <p className="text-3xl font-bold text-white mt-1">
             {monthsWithSales} / {totalMonths}
@@ -70,8 +71,11 @@ const StatsCard = ({
   monthlyData,
   animateCharts
 }) => {
-  // Calculate months with sales activity
-  const monthsWithSales = monthlyData ? monthlyData.length : 0;
+  // Calculate months with sales activity - only count months with sales > 0
+  const monthsWithSales = monthlyData 
+    ? monthlyData.filter(month => month.sales > 0).length 
+    : 0;
+    
   // Total possible months is 12 for a financial year
   const totalMonths = selectedFinancialYear === "All Years" ? 
     12 * (new Set(monthlyData?.map(item => item.fiscalYear)).size || 1) : 12;
@@ -89,6 +93,7 @@ const StatsCard = ({
         monthsWithSales={monthsWithSales}
         totalMonths={totalMonths}
         selectedFinancialYear={selectedFinancialYear}
+        activeProduct={activeProduct}
         animateCharts={animateCharts}
       />
     </div>
