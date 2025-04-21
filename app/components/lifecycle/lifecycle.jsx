@@ -10,6 +10,7 @@ import StatsCard from './StatsCard';
 import CustomerBarChart from './CustomerBarChart';
 import MonthlyBarChart from './MonthlyBarChart';
 import ProductPieChart from './ProductPieChart';
+import FinancialYearBarChart from './FinancialYearBarChart';
 import DropdownFilters from '../dashboard/dropdownfiter';
 import TopPerformingSKUs from '../dashboard/topperforming';
 
@@ -35,6 +36,11 @@ export default function LifecyclePage() {
   const [prevYearSales, setPrevYearSales] = useState(0);
   const [salesGrowth, setSalesGrowth] = useState(0);
   const [animateCharts, setAnimateCharts] = useState(false);
+  
+  // State for drill-down functionality
+  const [yearlyData, setYearlyData] = useState([]);
+  const [drillDownYear, setDrillDownYear] = useState(null);
+  const [isDrillingDown, setIsDrillingDown] = useState(false);
 
   // State for forecast data (for DropdownFilters and TopPerformingSKUs)
   const [forecastData, setForecastData] = useState([]);
@@ -99,6 +105,60 @@ export default function LifecyclePage() {
     loadLifecycleData();
     // Load forecast data separately
     loadForecastData();
+  }, []);
+
+  // Prepare yearly data for drill-down chart
+  const prepareYearlyData = useCallback(() => {
+    if (!csvLoaded || data.length === 0) return;
+
+    let filteredData = [...data];
+    
+    // Filter by customer if not "All Customers"
+    if (!selectedCustomers.includes("All Customers")) {
+      filteredData = filteredData.filter(row => selectedCustomers.includes(row.Customer));
+    }
+    
+    // Filter by product if selected
+    if (activeProduct) {
+      filteredData = filteredData.filter(row => row.Product === activeProduct);
+    }
+    
+    // Create yearly sales data (excluding "All Years" which is at index 0)
+    const yearlySalesMap = {};
+    
+    filteredData.forEach(row => {
+      const year = row['Financial Year'];
+      const sales = parseFloat(row.Sales || 0);
+      if (!isNaN(sales) && year && year !== "All Years") {
+        yearlySalesMap[year] = (yearlySalesMap[year] || 0) + sales;
+      }
+    });
+    
+    // Convert to array for chart
+    const yearlySalesData = Object.entries(yearlySalesMap)
+      .map(([year, sales]) => ({ year, sales }))
+      .sort((a, b) => a.year.localeCompare(b.year)); // Sort by year
+    
+    setYearlyData(yearlySalesData);
+  }, [csvLoaded, data, selectedCustomers, activeProduct]);
+
+  // Call this function when component mounts and when selections change
+  useEffect(() => {
+    prepareYearlyData();
+  }, [prepareYearlyData, selectedCustomers, activeProduct, csvLoaded]);
+
+  // Handle drill-down when a year is clicked
+  const handleYearClick = useCallback((year) => {
+    setDrillDownYear(year);
+    setSelectedFinancialYear(year);
+    setIsDrillingDown(true);
+  }, []);
+
+  // Handle going back from drill-down view
+  const handleBackToYears = useCallback(() => {
+    setDrillDownYear(null);
+    setIsDrillingDown(false);
+    setSelectedFinancialYear("All Years");
   }, []);
 
   // Load forecast data from a separate CSV - isolated function
@@ -166,7 +226,7 @@ export default function LifecyclePage() {
     }, 400);
     
     return () => clearTimeout(timer);
-  }, [selectedCustomers, selectedFinancialYear, activeProduct, csvLoaded]);
+  }, [selectedCustomers, selectedFinancialYear, activeProduct, csvLoaded, isDrillingDown, drillDownYear]);
 
   // Handle forecast filter changes - improved to avoid unnecessary updates
   const handleForecastFilterChange = useCallback((filters) => {
@@ -220,7 +280,7 @@ export default function LifecyclePage() {
       
       setForecastDepots(filteredDepots);
       
-      // Update filters after lists are updated
+      // Update filters after lists are updated1
       setSelectedForecastFilters(filters);
       setForecastLoading(false);
     };
@@ -327,10 +387,13 @@ export default function LifecyclePage() {
     // Create monthly sales data
     const monthlySalesMap = {};
     filteredData.forEach(row => {
-      const month = row.Month;
-      const sales = parseFloat(row.Sales || 0);
-      if (!isNaN(sales) && month) {
-        monthlySalesMap[month] = (monthlySalesMap[month] || 0) + sales;
+      // If we're drilling down, only include data for the selected year
+      if (!isDrillingDown || row['Financial Year'] === drillDownYear) {
+        const month = row.Month;
+        const sales = parseFloat(row.Sales || 0);
+        if (!isNaN(sales) && month) {
+          monthlySalesMap[month] = (monthlySalesMap[month] || 0) + sales;
+        }
       }
     });
     
@@ -365,7 +428,7 @@ export default function LifecyclePage() {
     setBarData(barChartData);
     setMonthlyData(monthlyBarData);
     setPieData(pieChartData);
-  }, [csvLoaded, data, calculateTotalSales, financialYears]);
+  }, [csvLoaded, data, calculateTotalSales, financialYears, isDrillingDown, drillDownYear]);
 
   // Handle customer selection
   const handleCustomerToggle = useCallback((customer) => {
@@ -389,7 +452,13 @@ export default function LifecyclePage() {
   // Handle financial year selection
   const handleFinancialYearSelect = useCallback((year) => {
     setSelectedFinancialYear(year);
-  }, []);
+    
+    // Reset drill-down state when changing financial year directly
+    if (isDrillingDown) {
+      setIsDrillingDown(false);
+      setDrillDownYear(null);
+    }
+  }, [isDrillingDown]);
 
   // Handle pie chart segment click
   const handlePieClick = useCallback((product) => {
@@ -448,6 +517,7 @@ export default function LifecyclePage() {
                     activeProduct={activeProduct}
                     selectedFinancialYear={selectedFinancialYear}
                     selectedCustomers={selectedCustomers}
+                    monthlyData={monthlyData}  // Add this line
                     animateCharts={animateCharts}
                   />
                 )}
@@ -456,12 +526,24 @@ export default function LifecyclePage() {
                 {activeProduct && (
                   <div className="mb-6 animate-fadeIn">
                     <div className="flex items-center">
-                      <span className="text-sm text-gray-600 mr-2">Active Filter:</span>
+                      <span className="text-sm text-white mr-2">Active Filter:</span>
                       <span 
                         className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center cursor-pointer transition-all duration-300 hover:bg-blue-200"
                         onClick={() => setActiveProduct(null)}
                       >
                         {activeProduct} <span className="ml-1 transition-transform duration-300 hover:scale-125">×</span>
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Drill-down Status Display */}
+                {isDrillingDown && (
+                  <div className="mb-6 animate-fadeIn">
+                    <div className="flex items-center">
+                      <span className="text-sm text-white mr-2">Viewing monthly breakdown for:</span>
+                      <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
+                        {drillDownYear}
                       </span>
                     </div>
                   </div>
@@ -477,15 +559,27 @@ export default function LifecyclePage() {
                 {/* Charts Container */}
                 {!loading && selectedFinancialYear && (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Show either Financial Year Chart or Monthly Chart based on drill-down state */}
+                    {!isDrillingDown ? (
+                      /* Financial Year Bar Chart */
+                      <FinancialYearBarChart 
+                        yearlyData={yearlyData} 
+                        animateCharts={animateCharts}
+                        handleYearClick={handleYearClick}
+                      />
+                    ) : (
+                      /* Monthly Bar Chart - With Drill-down View */
+                      <MonthlyBarChart 
+                        monthlyData={monthlyData} 
+                        animateCharts={animateCharts}
+                        selectedYear={drillDownYear}
+                        onBackClick={handleBackToYears}
+                      />
+                    )}
+                    
                     {/* Bar Chart - Total Sales by Customer */}
                     <CustomerBarChart 
                       barData={barData} 
-                      animateCharts={animateCharts} 
-                    />
-                    
-                    {/* Bar Chart - Monthly Sales Trend */}
-                    <MonthlyBarChart 
-                      monthlyData={monthlyData} 
                       animateCharts={animateCharts} 
                     />
                     

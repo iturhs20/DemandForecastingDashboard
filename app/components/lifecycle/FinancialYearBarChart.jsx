@@ -1,7 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const MonthlyBarChart = ({ monthlyData, animateCharts, selectedYear, onBackClick }) => {
-  // Format large numbers to use L (Lakh) or M (Million) notation
+const FinancialYearBarChart = ({ yearlyData, animateCharts, handleYearClick }) => {
+  // Format large numbers to use Cr (Crore), L (Lakh) or K (Thousand) notation
   const formatYAxis = (value) => {
     if (value >= 10000000) {
       return `${(value / 10000000).toFixed(1)}Cr`;
@@ -20,7 +20,7 @@ const MonthlyBarChart = ({ monthlyData, animateCharts, selectedYear, onBackClick
         <div className="bg-white text-black p-3 rounded-lg shadow-lg border border-gray-200">
           <p className="font-medium text-black mb-1">{label}</p>
           <p className="text-green-600 font-semibold">
-            Monthly Sales (₹): {payload[0].value.toLocaleString()}
+            Yearly Sales (₹): {payload[0].value.toLocaleString()}
           </p>
         </div>
       );
@@ -30,37 +30,29 @@ const MonthlyBarChart = ({ monthlyData, animateCharts, selectedYear, onBackClick
 
   return (
     <div className={`bg-gradient-to-br from-[#024673] to-[#5C99E3] p-4 rounded-lg border border-blue-200 shadow-sm transition-all duration-500 ease-in-out transform ${animateCharts ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '200ms' }}>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-white">Monthly Sales for {selectedYear}</h2>
-        <button 
-          onClick={onBackClick} 
-          className="bg-white text-black py-1 px-3 rounded text-sm flex items-center transition-colors duration-300"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Back to Years
-        </button>
-      </div>
+      <h2 className="font-semibold text-white mb-4">Financial Year Sales</h2>
+      <p className="text-white text-sm mb-2">Click on a year to view monthly breakdown</p>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={monthlyData}
+            data={yearlyData}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" stroke="white"/>
+            <XAxis dataKey="year" stroke="white"/>
             <YAxis tickFormatter={formatYAxis} stroke="white"/>
             <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ transition: 'all 0.3s ease' }} />
             <Bar 
               dataKey="sales" 
-              name="Monthly Sales (₹)" 
-              fill="#00C49F"
+              name="Yearly Sales (₹)" 
+              fill="#0088FE"
               stroke="white" 
               radius={[4, 4, 0, 0]}
               animationDuration={1500}
               animationEasing="ease-in-out"
+              onClick={(data) => handleYearClick(data.year)}
+              style={{ cursor: 'pointer' }}
             />
           </BarChart>
         </ResponsiveContainer>
@@ -69,4 +61,4 @@ const MonthlyBarChart = ({ monthlyData, animateCharts, selectedYear, onBackClick
   );
 };
 
-export default MonthlyBarChart;
+export default FinancialYearBarChart;
